@@ -36,7 +36,7 @@ void mywrite(T...)(T ts)
 }+/
 
 /// custom format function to print arbitrary structs without toString() member
-string myformat(T...)(T ts, bool bInsideStruct = false)
+string myformat(bool bInsideStruct = false, T...)(T ts)
 {
 	string res;
 
@@ -49,7 +49,7 @@ string myformat(T...)(T ts, bool bInsideStruct = false)
 		}
 		else static if (is (typeof(t) == interface))
 		{
-			pragma(msg, typeof(t));
+			res ~= format(cast(void*) t);
 		}
 		else static if (is (typeof(t) == struct))
 		{
@@ -60,19 +60,19 @@ string myformat(T...)(T ts, bool bInsideStruct = false)
 				res ~= "{";
 				foreach(i, el; t.tupleof)
 				{
-					res ~= t.tupleof[i].stringof[2..$] ~ ":" ~ myformat(el, true); // the slice cuts off the "t." that is always prepended
+					res ~= t.tupleof[i].stringof[2..$] ~ ":" ~ myformat!true(el); // the slice cuts off the "t." that is always prepended
 					static if (i < t.tupleof.length-1)
 						res ~= ", ";
 				}
 				res ~= "}";
 			}
 		}
-		else static if (isSomeString!(typeof(t))) // enclose a string in ""
+		else static if (isSomeString!(typeof(t)) && bInsideStruct) // enclose a string in ""
 		{
-			if (bInsideStruct)
+//			if (bInsideStruct)
 				res ~= `"` ~ t ~ `"`;
-			else
-				res ~= t;
+//			else
+//				res ~= t;
 		}
 		else
 			res ~= format(t);

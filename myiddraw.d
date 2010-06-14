@@ -6,7 +6,6 @@ module myiddraw;
 import ddraw;
 
 import logger;
-import tools;
 import std.conv;
 
 import myiddrawsurface;
@@ -21,7 +20,7 @@ alias MyIDirectDrawB!(2) MyIDirectDraw2; ///
 alias MyIDirectDrawB!(4) MyIDirectDraw4; ///
 alias MyIDirectDrawB!(7) MyIDirectDraw7; ///
 
-class MyIDirectDrawB(uint ver = 1) : IDirectDrawB!(ver)
+class MyIDirectDrawB(uint ver) : IDirectDrawB!(ver)
 {
 private:
 	static if (ver < 4)

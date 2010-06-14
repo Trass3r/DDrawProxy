@@ -3,9 +3,10 @@
  */
 module logger;
 
-import tools;
 import std.stdio;
 import std.c.windows.windows;
+
+import tools;
 
 /// small logging class
 struct Logger
@@ -14,6 +15,9 @@ struct Logger
 	
 	/// open the file
 	static void init(string filename)
+	{
+	version (NoLogging) {}
+	else
 	{
 		try
 		{
@@ -24,13 +28,21 @@ struct Logger
 			MessageBoxA(null, ("Exception: " ~ e.toString() ~ "\0").ptr, "DDraw Proxy", 0);
 		}
 	}
+	}
 	
 	/// close the log file
 	static void close()
 	{
-		f.close();
+		version (NoLogging) {}
+		else
+			f.close();
 	}
 	
+	version (NoLogging)
+	static void addEntry(...)
+	{
+	}
+	else
 	/// add a log entry
 	static void addEntry(T...)(T ts)
 	{

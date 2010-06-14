@@ -6,7 +6,6 @@ module myipalette;
 import ddraw;
 
 import logger;
-import tools;
 
 class MyIDirectDrawPalette : IDirectDrawPalette
 {
@@ -26,7 +25,7 @@ extern(Windows):
 	/// 
 	override HRESULT QueryInterface(REFIID riid, LPVOID* ppvObj)
 	{
-		Logger.addEntry("MyIDirectDrawPalette.QueryInterface(" ~ myformat(riid) ~ ")");
+		Logger.addEntry("MyIDirectDrawPalette.QueryInterface(", riid, ")");
 
 		return _lpDDP.QueryInterface(riid, ppvObj);
 	}
@@ -49,28 +48,28 @@ extern(Windows):
 	override HRESULT GetCaps(LPDWORD lpdwCaps)
 	{
 		auto res = _lpDDP.GetCaps(lpdwCaps);
-		Logger.addEntry("MyIDirectDrawPalette.GetCaps(" ~ myformat(lpdwCaps) ~ ")");
+		Logger.addEntry("MyIDirectDrawPalette.GetCaps(", lpdwCaps, ")");
 		return res;
 	}
 	
 	///
 	override HRESULT GetEntries(DWORD dwFlags, DWORD dwBase, DWORD dwNumEntries, LPPALETTEENTRY lpEntries )
 	{
-		Logger.addEntry("MyIDirectDrawPalette.GetEntries(" ~ myformat(dwFlags, dwBase, dwNumEntries) ~ ")");
+		Logger.addEntry("MyIDirectDrawPalette.GetEntries(", dwFlags, dwBase, dwNumEntries, ")");
 		return _lpDDP.GetEntries(dwFlags, dwBase, dwNumEntries, lpEntries);
 	}
 	
 	///
 	override HRESULT Initialize(LPDIRECTDRAW lpDD, DWORD dwFlags, LPPALETTEENTRY lpDDColorTable)
 	{
-		Logger.addEntry("MyIDirectDrawPalette.Initialize(" ~ myformat(dwFlags) ~ ")");
+		Logger.addEntry("MyIDirectDrawPalette.Initialize(", dwFlags, ")");
 		return _lpDDP.Initialize(lpDD, dwFlags, lpDDColorTable);
 	}
 	
 	///
 	override HRESULT SetEntries(DWORD dwFlags, DWORD dwStartingEntry, DWORD dwCount, LPPALETTEENTRY lpEntries)
 	{
-		Logger.addEntry("MyIDirectDrawPalette.SetEntries(" ~ myformat(dwFlags, dwStartingEntry, dwCount) ~ ")");
+		Logger.addEntry("MyIDirectDrawPalette.SetEntries(", dwFlags, dwStartingEntry, dwCount, ")");
 		return _lpDDP.SetEntries(dwFlags, dwStartingEntry, dwCount, lpEntries);
 	}
 }
