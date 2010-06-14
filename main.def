@@ -1,0 +1,27 @@
+LIBRARY ddraw
+SUBSYSTEM WINDOWS 5.1
+EXETYPE NT
+
+EXPORTS
+;		DirectDrawEnumerateExA = DirectDrawEnumerateExAHook
+;		AcquireDDThreadLock = AcquireDDThreadLockHook
+;		ReleaseDDThreadLock = ReleaseDDThreadLockHook
+;		DirectDrawCreateEx = DirectDrawCreateExHook
+;		RegisterSpecialCase = RegisterSpecialCaseHook
+;		DDInternalUnlock = DDInternalUnlockHook
+;		DDInternalLock = DDInternalLockHook
+;		CheckFullscreen = CheckFullscreenHook
+;		GetOLEThunkData = GetOLEThunkDataHook
+;		GetDDSurfaceLocal = GetDDSurfaceLocalHook
+;		CompleteCreateSysmemSurface = CompleteCreateSysmemSurfaceHook
+;		DirectDrawEnumerateExW = DirectDrawEnumerateExWHook
+;		D3DParseUnknownCommand = D3DParseUnknownCommandHook
+;		DirectDrawEnumerateW = DirectDrawEnumerateWHook
+;		DirectDrawEnumerateA = DirectDrawEnumerateAHook
+		DirectDrawCreate = DirectDrawCreateHook
+;		DDGetAttachedSurfaceLcl = DDGetAttachedSurfaceLclHook
+;		DSoundHelp = DSoundHelpHook
+;		DirectDrawCreateClipper = DirectDrawCreateClipperHook
+;		DllGetClassObject = DllGetClassObjectHook
+;		DllCanUnloadNow = DllCanUnloadNowHook
+;		GetSurfaceFromDC = GetSurfaceFromDCHook
