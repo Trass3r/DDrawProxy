@@ -6,12 +6,11 @@ module main;
 import std.c.windows.com;
 import std.c.windows.windows;
 import core.dll_helper;
-import std.stdio;
+//import std.stdio;
 import ddraw;
 import myiddraw;
 import logger;
 
-import std.conv;
 
 alias const ref IID REFIID; 
 
@@ -84,6 +83,9 @@ void loadOriginalDll()
 
 extern(Windows):
 __gshared MyIDirectDraw g_myIDDraw;
+__gshared MyIDirectDraw2 g_myIDDraw2;
+__gshared MyIDirectDraw4 g_myIDDraw4;
+__gshared MyIDirectDraw7 g_myIDDraw7;
 
 /// An exported function (faking ddraw.dll's export)
 export HRESULT DirectDrawCreateHook(GUID* lpGUID, LPDIRECTDRAW* lplpDD, IUnknown* pUnkOuter)
@@ -101,22 +103,24 @@ export HRESULT DirectDrawCreateHook(GUID* lpGUID, LPDIRECTDRAW* lplpDD, IUnknown
 
 	return res;
 }
-/+
+
 HRESULT DirectDrawCreateExHook(GUID* lpGuid, LPVOID* lplpDD, REFIID iid, IUnknown* pUnkOuter)
 {
-//	return DirectDrawCreateExProc(lpGuid, lplpDD, iid, pUnkOuter);
-	
-	if (iid != IID_IDirectDraw7)
-	{
-		throw new Exception("DDRAWPROXY: IID_IDirectDraw7 not requested. ERROR ****\r\n");
-	}
-	
 	alias extern(Windows) HRESULT function(GUID*, LPVOID*, REFIID, IUnknown*) DirectDrawCreateExFn;
 	auto DirectDrawCreateEx = cast(DirectDrawCreateExFn) GetProcAddress( g_originalDDrawDll, "DirectDrawCreateEx");
 	
-	HRESULT res = DirectDrawCreateEx(lpGuid, lplpDD, iid, pUnkOuter);
-	*lplpDD = cast(LPVOID) new MyIDirectDraw(**lplpDD);
-
+	HRESULT res;
+	if ((res = DirectDrawCreateEx(lpGuid, lplpDD, iid, pUnkOuter)) == DD_OK)
+	{
+		if (iid == IID_IDirectDraw)
+			g_myIDDraw = new MyIDirectDraw(lplpDD);
+		else if (iid == IID_IDirectDraw2)
+			g_myIDDraw2 = new MyIDirectDraw2(lplpDD);
+		else if (iid == IID_IDirectDraw4)
+			g_myIDDraw4 = new MyIDirectDraw4(lplpDD);
+		else if (iid == IID_IDirectDraw7)
+			g_myIDDraw7 = new MyIDirectDraw7(lplpDD);
+	}
+	
 	return res;
 }
-+/

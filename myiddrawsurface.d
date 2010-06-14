@@ -114,35 +114,35 @@ extern(Windows):
 	/// 
 	override HRESULT AddOverlayDirtyRect(LPRECT lpRect)
 	{		auto res = _lpDDSurface.AddOverlayDirtyRect(lpRect);
-		Logger.addEntry("MyIDirectDrawSurface.AddOverlayDirtyRect() = ", res);
+		Logger.addEntry("MyIDirectDrawSurface.AddOverlayDirtyRect(", lpRect, ") = ", res);
 		return res;
 	}
 
 	/// 
 	override HRESULT Blt(LPRECT lpDestRect, LPProperDirectDrawSurface lpDDSrcSurface, LPRECT lpSrcRect, DWORD dwFlags, LPDDBLTFX lpDDBltFx)
 	{		auto res = _lpDDSurface.Blt(lpDestRect, lpDDSrcSurface, lpSrcRect, dwFlags, lpDDBltFx);
-		Logger.addEntry("MyIDirectDrawSurface.Blt() = ", res);
+		Logger.addEntry("MyIDirectDrawSurface.Blt(", lpDestRect, lpDDSrcSurface, lpSrcRect, dwFlags, lpDDBltFx, ") = ", res);
 		return res;
 	}
 
 	/// 
 	override HRESULT BltBatch(LPDDBLTBATCH lpDDBltBatch, DWORD dwCount, DWORD dwFlags)
 	{		auto res = _lpDDSurface.BltBatch(lpDDBltBatch, dwCount, dwFlags);
-		Logger.addEntry("MyIDirectDrawSurface.BltBatch() = ", res);
+		Logger.addEntry("MyIDirectDrawSurface.BltBatch(", lpDDBltBatch, dwCount, dwFlags, ") = ", res);
 		return res;
 	}
 
 	/// 
 	override HRESULT BltFast(DWORD dwX, DWORD dwY, LPProperDirectDrawSurface lpDDSrcSurface, LPRECT lpSrcRect, DWORD dwTrans)
 	{		auto res = _lpDDSurface.BltFast(dwX, dwY, lpDDSrcSurface, lpSrcRect, dwTrans);
-		Logger.addEntry("MyIDirectDrawSurface.BltFast() = ", res);
+		Logger.addEntry("MyIDirectDrawSurface.BltFast(", dwX, dwY, lpDDSrcSurface, lpSrcRect, dwTrans, ") = ", res);
 		return res;
 	}
 
 	/// 
 	override HRESULT DeleteAttachedSurface(DWORD dwFlags, LPProperDirectDrawSurface lpDDSAttachedSurface)
 	{		auto res = _lpDDSurface.DeleteAttachedSurface(dwFlags, lpDDSAttachedSurface);
-		Logger.addEntry("MyIDirectDrawSurface.DeleteAttachedSurface() = ", res);
+		Logger.addEntry("MyIDirectDrawSurface.DeleteAttachedSurface(", dwFlags, ") = ", res);
 		return res;
 	}
 
@@ -156,14 +156,14 @@ extern(Windows):
 	/// 
 	override HRESULT EnumOverlayZOrders(DWORD dwFlags, LPVOID lpContext, LPProperDDEnumSurfacesCallback lpfnCallback)
 	{		auto res = _lpDDSurface.EnumOverlayZOrders(dwFlags, lpContext, lpfnCallback);
-		Logger.addEntry("MyIDirectDrawSurface.EnumOverlayZOrders() = ", res);
+		Logger.addEntry("MyIDirectDrawSurface.EnumOverlayZOrders(", dwFlags, ") = ", res);
 		return res;
 	}
 
 	/// 
 	override HRESULT Flip(LPProperDirectDrawSurface lpDDSurfaceTargetOverride, DWORD dwFlags)
 	{		auto res = _lpDDSurface.Flip(lpDDSurfaceTargetOverride, dwFlags);
-		Logger.addEntry("MyIDirectDrawSurface.Flip() = ", res);
+		Logger.addEntry("MyIDirectDrawSurface.Flip(", lpDDSurfaceTargetOverride, dwFlags, ") = ", res);
 		return res;
 	}
 

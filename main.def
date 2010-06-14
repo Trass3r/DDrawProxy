@@ -6,7 +6,7 @@ EXPORTS
 ;		DirectDrawEnumerateExA = DirectDrawEnumerateExAHook
 ;		AcquireDDThreadLock = AcquireDDThreadLockHook
 ;		ReleaseDDThreadLock = ReleaseDDThreadLockHook
-;		DirectDrawCreateEx = DirectDrawCreateExHook
+		DirectDrawCreateEx = DirectDrawCreateExHook
 ;		RegisterSpecialCase = RegisterSpecialCaseHook
 ;		DDInternalUnlock = DDInternalUnlockHook
 ;		DDInternalLock = DDInternalLockHook
