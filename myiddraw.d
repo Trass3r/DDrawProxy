@@ -14,7 +14,7 @@ import myipalette;
 
 __gshared HWND g_hWnd;
 __gshared MyIDirectDrawSurface[] g_mySurfaces;
-__gshared MyIDirectDrawPalette[] g_mypalettes;
+__gshared MyIDirectDrawPalette[] g_myPalettes;
 
 alias MyIDirectDrawB!(1) MyIDirectDraw; ///
 alias MyIDirectDrawB!(2) MyIDirectDraw2; ///
@@ -131,7 +131,7 @@ extern(Windows):
 	{
 		HRESULT res;
 		if ((res = _lpDD.CreatePalette(dwFlags, lpColorTable, lplpDDPalette, pUnkOuter)) == DD_OK)
-//			g_mypalettes ~= new MyIDirectDrawPalette(lplpDDPalette);
+//			g_myPalettes ~= new MyIDirectDrawPalette(lplpDDPalette);
 		{}
 		Logger.addEntry("MyIDirectDraw.CreatePalette(", dwFlags, ") = ", res);
 		return res;

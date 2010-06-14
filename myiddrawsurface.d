@@ -198,7 +198,7 @@ extern(Windows):
 	/// 
 	override HRESULT GetColorKey(DWORD dwFlags, LPDDCOLORKEY lpDDColorKey)
 	{		auto res = _lpDDSurface.GetColorKey(dwFlags, lpDDColorKey);
-		Logger.addEntry("MyIDirectDrawSurface.GetColorKey() = ", res);
+		Logger.addEntry("MyIDirectDrawSurface.GetColorKey(", dwFlags, ") = ", res);
 		return res;
 	}
 
@@ -212,14 +212,14 @@ extern(Windows):
 	/// 
 	override HRESULT GetFlipStatus(DWORD dwFlags)
 	{		auto res = _lpDDSurface.GetFlipStatus(dwFlags);
-		Logger.addEntry("MyIDirectDrawSurface.GetFlipStatus() = ", res);
+		Logger.addEntry("MyIDirectDrawSurface.GetFlipStatus(", dwFlags, ") = ", res);
 		return res;
 	}
 
 	/// 
 	override HRESULT GetOverlayPosition(LPLONG lplX, LPLONG lplY)
 	{		auto res = _lpDDSurface.GetOverlayPosition(lplX, lplY);
-		Logger.addEntry("MyIDirectDrawSurface.GetOverlayPosition() = ", res);
+		Logger.addEntry("MyIDirectDrawSurface.GetOverlayPosition(", lplX, lplY, ") = ", res);
 		return res;
 	}
 
@@ -233,14 +233,14 @@ extern(Windows):
 	/// 
 	override HRESULT GetPixelFormat(LPDDPIXELFORMAT lpDDPixelFormat)
 	{		auto res = _lpDDSurface.GetPixelFormat(lpDDPixelFormat);
-		Logger.addEntry("MyIDirectDrawSurface.GetPixelFormat() = ", res);
+		Logger.addEntry("MyIDirectDrawSurface.GetPixelFormat(", lpDDPixelFormat, ") = ", res);
 		return res;
 	}
 
 	/// 
 	override HRESULT GetSurfaceDesc(LPProperDDSurfaceDesc lpDDSurfaceDesc)
 	{		auto res = _lpDDSurface.GetSurfaceDesc(lpDDSurfaceDesc);
-		Logger.addEntry("MyIDirectDrawSurface.GetSurfaceDesc() = ", res);
+		Logger.addEntry("MyIDirectDrawSurface.GetSurfaceDesc(", lpDDSurfaceDesc, ") = ", res);
 		return res;
 	}
 
@@ -261,7 +261,7 @@ extern(Windows):
 	/// 
 	override HRESULT Lock(LPRECT lpDestRect, LPProperDDSurfaceDesc lpDDSurfaceDesc, DWORD dwFlags, HANDLE hEvent)
 	{		auto res = _lpDDSurface.Lock(lpDestRect, lpDDSurfaceDesc, dwFlags, hEvent);
-		Logger.addEntry("MyIDirectDrawSurface.Lock() = ", res);
+		Logger.addEntry("MyIDirectDrawSurface.Lock(", lpDestRect, lpDDSurfaceDesc, dwFlags, hEvent, ") = ", res);
 		return res;
 	}
 
@@ -282,35 +282,35 @@ extern(Windows):
 	/// 
 	override HRESULT SetClipper(LPDIRECTDRAWCLIPPER lpDDClipper)
 	{		auto res = _lpDDSurface.SetClipper(lpDDClipper);
-		Logger.addEntry("MyIDirectDrawSurface.SetClipper() = ", res);
+		Logger.addEntry("MyIDirectDrawSurface.SetClipper(", lpDDClipper, ") = ", res);
 		return res;
 	}
 
 	/// 
 	override HRESULT SetColorKey(DWORD dwFlags, LPDDCOLORKEY lpDDColorKey)
 	{		auto res = _lpDDSurface.SetColorKey(dwFlags, lpDDColorKey);
-		Logger.addEntry("MyIDirectDrawSurface.SetColorKey() = ", res);
+		Logger.addEntry("MyIDirectDrawSurface.SetColorKey(", dwFlags, ") = ", res);
 		return res;
 	}
 
 	/// 
 	override HRESULT SetOverlayPosition(LONG lX, LONG lY)
 	{		auto res = _lpDDSurface.SetOverlayPosition(lX, lY);
-		Logger.addEntry("MyIDirectDrawSurface.SetOverlayPosition() = ", res);
+		Logger.addEntry("MyIDirectDrawSurface.SetOverlayPosition(", lX, lY, ") = ", res);
 		return res;
 	}
 
 	/// 
 	override HRESULT SetPalette(LPDIRECTDRAWPALETTE lpDDPalette)
 	{		auto res = _lpDDSurface.SetPalette(lpDDPalette);
-		Logger.addEntry("MyIDirectDrawSurface.SetPalette(", ") = ", res);
+		Logger.addEntry("MyIDirectDrawSurface.SetPalette(", lpDDPalette, ") = ", res);
 		return res;
 	}
 
 	/// 
 	override HRESULT Unlock(LPRECT lpRect)
 	{		auto res = _lpDDSurface.Unlock(lpRect);
-		Logger.addEntry("MyIDirectDrawSurface.Unlock() = ", res);
+		Logger.addEntry("MyIDirectDrawSurface.Unlock(", lpRect, ") = ", res);
 		return res;
 	}
 
