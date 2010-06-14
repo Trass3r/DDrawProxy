@@ -122,9 +122,10 @@ extern(Windows):
 	override HRESULT  CreateClipper(DWORD dwFlags, LPDIRECTDRAWCLIPPER* lplpDDClipper, IUnknown* pUnkOuter)
 	{
 		auto res = _lpDD.CreateClipper(dwFlags, lplpDDClipper, pUnkOuter);
-		Logger.addEntry("MyIDirectDraw.CreateClipper(", dwFlags, ") = ", res);
+		Logger.addEntry("MyIDirectDraw.CreateClipper(", dwFlags, lplpDDClipper, ") = ", res);
 		return res;
 	}
+	
 	/// 
 	override HRESULT  CreatePalette(DWORD dwFlags, LPPALETTEENTRY lpColorTable, LPDIRECTDRAWPALETTE* lplpDDPalette, IUnknown* pUnkOuter)
 	{
@@ -132,15 +133,14 @@ extern(Windows):
 		if ((res = _lpDD.CreatePalette(dwFlags, lpColorTable, lplpDDPalette, pUnkOuter)) == DD_OK)
 //			g_myPalettes ~= new MyIDirectDrawPalette(lplpDDPalette);
 		{}
-		Logger.addEntry("MyIDirectDraw.CreatePalette(", dwFlags, ") = ", res);
+		Logger.addEntry("MyIDirectDraw.CreatePalette(", dwFlags, lplpDDPalette, ") = ", res);
 		return res;
 	}
 	
 	/// 
 	override HRESULT CreateSurface(LPProperSurfaceDesc lpDDSurfaceDesc, LPProperDirectDrawSurface* lplpDDSurface, IUnknown* pUnkOuter)
 	{
-		Logger.addEntry("MyIDirectDraw.CreateSurface(", lpDDSurfaceDesc, ")");
-		
+		HRESULT res;
 		version(forceWindowed)
 		{
 			// original primary surface .dwFlags = DDSD_CAPS | DDSD_BACKBUFFERCOUNT
@@ -157,17 +157,16 @@ extern(Windows):
 			// normal sprites: DDSCAPS_COMPLEX | DDSCAPS_ALPHA | DDSCAPS_RESERVED1 | DDSCAPS_FLIP | DDSCAPS_FRONTBUFFER | DDSCAPS_OFFSCREENPLAIN | DDSCAPS_PALETTE | DDSCAPS_PRIMARYSURFACE | DDSCAPS_RESERVED3 | DDSCAPS_VIDEOMEMORY | 
 		}
 		version(NoSurfaceHooking)
-			return _lpDD.CreateSurface(lpDDSurfaceDesc, lplpDDSurface, pUnkOuter);
+			res = _lpDD.CreateSurface(lpDDSurfaceDesc, lplpDDSurface, pUnkOuter);
 		else
 		{
-			HRESULT res;
 			if((res = _lpDD.CreateSurface(lpDDSurfaceDesc, lplpDDSurface, pUnkOuter)) == DD_OK)
 			{
 				g_mySurfaces ~= new MyIDirectDrawSurface(lplpDDSurface);
 			}
-	
-			return res;
 		}
+		Logger.addEntry("MyIDirectDraw.CreateSurface(", lplpDDSurface, lpDDSurfaceDesc, ") = ", res);
+		return res;
 	}
 
 	/// 

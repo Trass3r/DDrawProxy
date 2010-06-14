@@ -42,19 +42,24 @@ string myformat(bool bInsideStruct = false, T...)(T ts)
 
 	foreach (tidx, t; ts)
 	{
-		static if (is (typeof(t) U : U*) && !is(U == void)) // is a pointer
+		static if (is (typeof(t) U : U*)) // is a pointer
 		{
-			if (t !is null)
-				res ~= myformat(*t);
+			static if (!is (U == void)) // is not a void*
+			{
+				if (t !is null)
+					res ~= myformat(*t);
+			}
+			else
+				res ~= format("0x%X", t); // void*
 		}
 		else static if (is (typeof(t) == interface))
 		{
-			res ~= format(cast(void*) t);
+			res ~= format("0x%X", cast(void*) t); // take the object's address
 		}
 		else static if (is (typeof(t) == struct))
 		{
-			static if (is (typeof(t.toString())))
-				res ~= t.toString();
+			static if (is (typeof(t.toString())))	// toString exists for that struct
+				res ~= t.toString();				// so use it
 			else
 			{
 				res ~= "{";
@@ -67,7 +72,7 @@ string myformat(bool bInsideStruct = false, T...)(T ts)
 				res ~= "}";
 			}
 		}
-		else static if (isSomeString!(typeof(t)) && bInsideStruct) // enclose a string in ""
+		else static if (isSomeString!(typeof(t)) && bInsideStruct) // enclose a string in "" inside structs
 		{
 //			if (bInsideStruct)
 				res ~= `"` ~ t ~ `"`;
@@ -77,7 +82,7 @@ string myformat(bool bInsideStruct = false, T...)(T ts)
 		else
 			res ~= format(t);
 		
-		static if(tidx < ts.length-1)
+		static if(tidx < ts.length-1 && (bInsideStruct || !isSomeString!(typeof(t)))) // don't add a , after a string
 			res ~= ", ";
 	}
 	
