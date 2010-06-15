@@ -12,7 +12,7 @@ import myiddraw;
 import logger;
 
 
-alias const ref IID REFIID; 
+alias IID* REFIID; 
 
 extern(Windows) HMODULE LoadLibraryW(LPCWSTR libnameW);
 
@@ -106,20 +106,25 @@ export HRESULT DirectDrawCreateHook(GUID* lpGUID, LPDIRECTDRAW* lplpDD, IUnknown
 
 HRESULT DirectDrawCreateExHook(GUID* lpGuid, LPVOID* lplpDD, REFIID iid, IUnknown* pUnkOuter)
 {
+	Logger.addEntry("DDRAWPROXY: Exported function DirectDrawCreateEx reached.");
+
 	alias extern(Windows) HRESULT function(GUID*, LPVOID*, REFIID, IUnknown*) DirectDrawCreateExFn;
 	auto DirectDrawCreateEx = cast(DirectDrawCreateExFn) GetProcAddress( g_originalDDrawDll, "DirectDrawCreateEx");
 	
 	HRESULT res;
 	if ((res = DirectDrawCreateEx(lpGuid, lplpDD, iid, pUnkOuter)) == DD_OK)
 	{
-		if (iid == IID_IDirectDraw)
+		if (*iid == IID_IDirectDraw)
 			g_myIDDraw = new MyIDirectDraw(lplpDD);
-		else if (iid == IID_IDirectDraw2)
+		else if (*iid == IID_IDirectDraw2)
 			g_myIDDraw2 = new MyIDirectDraw2(lplpDD);
-		else if (iid == IID_IDirectDraw4)
+		else if (*iid == IID_IDirectDraw4)
 			g_myIDDraw4 = new MyIDirectDraw4(lplpDD);
-		else if (iid == IID_IDirectDraw7)
+		else if (*iid == IID_IDirectDraw7)
+		{
+			Logger.addEntry("MyIDirectDraw7 created");
 			g_myIDDraw7 = new MyIDirectDraw7(lplpDD);
+		}
 	}
 	
 	return res;
