@@ -248,18 +248,6 @@ alias IDirectDrawB!(2) IDirectDraw2; ///
 alias IDirectDrawB!(4) IDirectDraw4; ///
 alias IDirectDrawB!(7) IDirectDraw7; ///
 
-// TODO: BUG: 4267
-alias void* LPDIRECTDRAW;
-alias void* LPDIRECTDRAW2;
-alias void* LPDIRECTDRAW4;
-alias void* LPDIRECTDRAW7;
-alias void* LPDIRECTDRAWSURFACE;
-alias void* LPDIRECTDRAWSURFACE2;
-alias void* LPDIRECTDRAWSURFACE3;
-alias void* LPDIRECTDRAWSURFACE4;
-alias void* LPDIRECTDRAWSURFACE7;
-
-/+
 alias IDirectDrawB!(1) LPDIRECTDRAW;
 alias IDirectDrawB!(2) LPDIRECTDRAW2;
 alias IDirectDrawB!(4) LPDIRECTDRAW4;
@@ -269,7 +257,7 @@ alias IDirectDrawSurfaceB!(2) LPDIRECTDRAWSURFACE2;
 alias IDirectDrawSurfaceB!(3) LPDIRECTDRAWSURFACE3;
 alias IDirectDrawSurfaceB!(4) LPDIRECTDRAWSURFACE4;
 alias IDirectDrawSurfaceB!(7) LPDIRECTDRAWSURFACE7;
-+/
+
 alias IDirectDrawPalette LPDIRECTDRAWPALETTE;
 alias IDirectDrawClipper LPDIRECTDRAWCLIPPER;
 alias IDirectDrawColorControl LPDIRECTDRAWCOLORCONTROL;

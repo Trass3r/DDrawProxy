@@ -45,7 +45,7 @@ private:
 	else
 		alias LPDDENUMMODESCALLBACK2 LPProperDDEnumModesCallback;
 
-	static if (ver < 4)
+	static if (ver < 2)
 		alias LPDIRECTDRAWSURFACE LPProperDirectDrawSurface;
 //	else static if (ver < 4)
 //		alias LPDIRECTDRAWSURFACE2 LPProperDirectDrawSurface;
@@ -64,10 +64,11 @@ private:
 	BaseInterface _lpDD;
 
 public:
-	this(LPDIRECTDRAW* lplpDD)
+	this(void** lplpDD)
 	{
+		Logger.addEntry("MyIDirectDraw created");
 		_lpDD = cast(BaseInterface) *lplpDD; // save the interface as a member
-		*lplpDD = cast(LPDIRECTDRAW) cast(BaseInterface) this; // alter the given pointer to this class instance
+		*lplpDD = cast(void*) cast(BaseInterface) this; // alter the given pointer to this class instance
 		// it's crucial to cast to the base interface here
 	}
 extern(Windows):
@@ -162,7 +163,9 @@ extern(Windows):
 		{
 			if((res = _lpDD.CreateSurface(lpDDSurfaceDesc, lplpDDSurface, pUnkOuter)) == DD_OK)
 			{
+				Logger.addEntry("original surface looks like ", (cast(ubyte*) *cast(IDirectDrawSurface*)lplpDDSurface)[0 .. IDirectDrawSurface.sizeof]);
 				g_mySurfaces ~= new MyIDirectDrawSurface(lplpDDSurface);
+				Logger.addEntry("my surface looks like ", (cast(ubyte*) *cast(IDirectDrawSurface*)lplpDDSurface)[0 .. IDirectDrawSurface.sizeof]);
 			}
 		}
 		Logger.addEntry("MyIDirectDraw.CreateSurface(", lplpDDSurface, lpDDSurfaceDesc, ") = ", res);

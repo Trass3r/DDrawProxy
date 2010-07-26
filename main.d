@@ -98,7 +98,7 @@ export HRESULT DirectDrawCreateHook(GUID* lpGUID, LPDIRECTDRAW* lplpDD, IUnknown
 	HRESULT res;
 	if((res = DirectDrawCreate(lpGUID, lplpDD, pUnkOuter)) == DD_OK)
 	{
-		g_myIDDraw = new MyIDirectDraw(lplpDD);
+		g_myIDDraw = new MyIDirectDraw(cast(void**)lplpDD);
 	}
 
 	return res;
