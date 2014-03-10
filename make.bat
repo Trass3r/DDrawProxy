@@ -1,8 +1,4 @@
-del .deps
-del .objs /Q
-del *.rsp
-
-xfbuild +v +xstd +xcore +oddraw.dll main.d main.def -debug -g -version=WOW64DLL
+rdmd --build-only -ofddraw.dll -debug -g -version=WOW64DLL main.def main.d
 REM -version=forceWindowed
 cv2pdb -D2 ddraw.dll
 
