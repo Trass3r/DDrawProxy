@@ -1,4 +1,4 @@
-rdmd --build-only -ofddraw.dll -debug -g -version=WOW64DLL main.def main.d
+rdmd --build-only --chatty -ofddraw.dll -debug -g -version=WOW64DLL -version=NoSurfaceHooking main.def main.d
 REM -version=forceWindowed
 cv2pdb -D2 ddraw.dll
 

@@ -92,10 +92,10 @@ export HRESULT DirectDrawCreateHook(GUID* lpGUID, LPDIRECTDRAW* lplpDD, IUnknown
 {
 	Logger.addEntry("DDRAWPROXY: Exported function DirectDrawCreate reached.");
 	
-	alias extern(Windows) HRESULT function(GUID*, LPDIRECTDRAW*, IUnknown*) DirectDrawCreateFn;
+	alias DirectDrawCreateFn = extern(Windows) DDRESULT function(GUID*, LPDIRECTDRAW*, IUnknown);
 	auto DirectDrawCreate = cast(DirectDrawCreateFn) GetProcAddress( g_originalDDrawDll, "DirectDrawCreate");
  
-	HRESULT res;
+	DDRESULT res;
 	if((res = DirectDrawCreate(lpGUID, lplpDD, pUnkOuter)) == DD_OK)
 	{
 		g_myIDDraw = new MyIDirectDraw(cast(void**)lplpDD);
@@ -108,10 +108,10 @@ HRESULT DirectDrawCreateExHook(GUID* lpGuid, LPVOID* lplpDD, REFIID iid, IUnknow
 {
 	Logger.addEntry("DDRAWPROXY: Exported function DirectDrawCreateEx reached.");
 
-	alias extern(Windows) HRESULT function(GUID*, LPVOID*, REFIID, IUnknown*) DirectDrawCreateExFn;
+	alias DirectDrawCreateExFn = extern(Windows) DDRESULT function(GUID*, LPVOID*, REFIID, IUnknown);
 	auto DirectDrawCreateEx = cast(DirectDrawCreateExFn) GetProcAddress( g_originalDDrawDll, "DirectDrawCreateEx");
 	
-	HRESULT res;
+	DDRESULT res;
 	if ((res = DirectDrawCreateEx(lpGuid, lplpDD, iid, pUnkOuter)) == DD_OK)
 	{
 		if (*iid == IID_IDirectDraw)

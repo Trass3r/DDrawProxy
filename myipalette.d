@@ -45,7 +45,7 @@ extern(Windows):
 	}
 	
 	/// This method retrieves the capabilities of this palette object
-	override HRESULT GetCaps(LPDWORD lpdwCaps)
+	override DDRESULT GetCaps(LPDWORD lpdwCaps)
 	{
 		auto res = _lpDDP.GetCaps(lpdwCaps);
 		Logger.addEntry("MyIDirectDrawPalette.GetCaps(", lpdwCaps, ")");
@@ -53,21 +53,21 @@ extern(Windows):
 	}
 	
 	///
-	override HRESULT GetEntries(DWORD dwFlags, DWORD dwBase, DWORD dwNumEntries, LPPALETTEENTRY lpEntries )
+	override DDRESULT GetEntries(DWORD dwFlags, DWORD dwBase, DWORD dwNumEntries, LPPALETTEENTRY lpEntries )
 	{
 		Logger.addEntry("MyIDirectDrawPalette.GetEntries(", dwFlags, dwBase, dwNumEntries, ")");
 		return _lpDDP.GetEntries(dwFlags, dwBase, dwNumEntries, lpEntries);
 	}
 	
 	///
-	override HRESULT Initialize(LPDIRECTDRAW lpDD, DWORD dwFlags, LPPALETTEENTRY lpDDColorTable)
+	override DDRESULT Initialize(LPDIRECTDRAW lpDD, DWORD dwFlags, LPPALETTEENTRY lpDDColorTable)
 	{
 		Logger.addEntry("MyIDirectDrawPalette.Initialize(", dwFlags, ")");
 		return _lpDDP.Initialize(lpDD, dwFlags, lpDDColorTable);
 	}
 	
 	///
-	override HRESULT SetEntries(DWORD dwFlags, DWORD dwStartingEntry, DWORD dwCount, LPPALETTEENTRY lpEntries)
+	override DDRESULT SetEntries(DWORD dwFlags, DWORD dwStartingEntry, DWORD dwCount, LPPALETTEENTRY lpEntries)
 	{
 		Logger.addEntry("MyIDirectDrawPalette.SetEntries(", dwFlags, dwStartingEntry, dwCount, ")");
 		return _lpDDP.SetEntries(dwFlags, dwStartingEntry, dwCount, lpEntries);

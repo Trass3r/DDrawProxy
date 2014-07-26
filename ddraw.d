@@ -1,4 +1,3 @@
-/* Converted to D from ddraw.h by htod */
 module ddraw;
 /*==========================================================================;
  *
@@ -12,6 +11,23 @@ module ddraw;
 
 public import std.c.windows.windows;
 public import std.c.windows.com;
+
+import std.traits;
+
+// a helper function to make elements of enums accessable without EnumType. prefix
+private string bringToCurrentScope(alias EnumType)()
+{
+	string res = "";
+	foreach (e; __traits(allMembers, EnumType))
+	{
+		res ~= "alias " ~ EnumType.stringof ~ "." ~ e ~ " " ~ e ~ ";\n";
+	}
+	return res;
+}
+
+extern(Windows):
+nothrow:
+@nogc:
 
 union LARGE_INTEGER
 {
@@ -55,7 +71,7 @@ alias RGNDATAHEADER* LPRGNDATAHEADER;
 
 alias IID* REFIID;
 
-const CO_E_NOTINITIALIZED = 0x800401F0L;
+enum CO_E_NOTINITIALIZED = 0x800401F0;
 
 /*
  * If you wish an application built against the newest version of DirectDraw
@@ -64,59 +80,43 @@ const CO_E_NOTINITIALIZED = 0x800401F0L;
  * example if you wish an application to run against a DX 3 runtime define
  * DIRECTDRAW_VERSION to be 0x0300.
  */
-const DIRECTDRAW_VERSION = 0x0700;
-
-//import std.c.objbase;
-
-const _FACDD = 0x876;
-
-
-//
-// For compilers that don't support nameless unions, do a
-//
-// #define NONAMELESSUNION
-//
-// before #include <ddraw.h>
-//
-
+enum DIRECTDRAW_VERSION = 0x0700;
 
 /*
  * FOURCC codes for DX compressed-texture pixel formats
  */
 
-uint MAKEFOURCC(char ch0, char ch1, char ch2, char ch3)
+private uint MAKEFOURCC(char ch0, char ch1, char ch2, char ch3)
 {
 	return cast(uint)ch0 | (cast(uint)ch1 << 8) | (cast(uint)ch2 << 16) | (cast(uint)ch3 << 24);
 }
 
-const FOURCC_DXT1 = MAKEFOURCC('D','X','T','1');
-const FOURCC_DXT2 = MAKEFOURCC('D','X','T','2');
-const FOURCC_DXT3 = MAKEFOURCC('D','X','T','3');
-const FOURCC_DXT4 = MAKEFOURCC('D','X','T','4');
-const FOURCC_DXT5 = MAKEFOURCC('D','X','T','5');
+enum FOURCC_DXT1 = MAKEFOURCC('D','X','T','1');
+enum FOURCC_DXT2 = MAKEFOURCC('D','X','T','2');
+enum FOURCC_DXT3 = MAKEFOURCC('D','X','T','3');
+enum FOURCC_DXT4 = MAKEFOURCC('D','X','T','4');
+enum FOURCC_DXT5 = MAKEFOURCC('D','X','T','5');
 
 /*
  * GUIDS used by DirectDraw objects
  */
 
-extern (C):
-
-const GUID CLSID_DirectDraw				= {0xD7B70EE0, 0x4340, 0x11CF, [0xB0, 0x63, 0x00, 0x20, 0xAF, 0xC2, 0xCD, 0x35]};
-const GUID CLSID_DirectDraw7			= {0x3c305196, 0x50db, 0x11d3, [0x9c, 0xfe, 0x00, 0xc0, 0x4f, 0xd9, 0x30, 0xc5]};
-const GUID CLSID_DirectDrawClipper		= {0x593817A0, 0x7DB3, 0x11CF, [0xA2, 0xDE, 0x00, 0xAA, 0x00, 0xb9, 0x33, 0x56]};
-const GUID IID_IDirectDraw				= {0x6C14DB80, 0xA733, 0x11CE, [0xA5, 0x21, 0x00, 0x20, 0xAF, 0x0B, 0xE5, 0x60]};
-const GUID IID_IDirectDraw2				= {0xB3A6F3E0, 0x2B43, 0x11CF, [0xA2, 0xDE, 0x00, 0xAA, 0x00, 0xB9, 0x33, 0x56]};
-const GUID IID_IDirectDraw4				= {0x9c59509a, 0x39bd, 0x11d1, [0x8c, 0x4a, 0x00, 0xc0, 0x4f, 0xd9, 0x30, 0xc5]};
-const GUID IID_IDirectDraw7				= {0x15e65ec0, 0x3b9c, 0x11d2, [0xb9, 0x2f, 0x00, 0x60, 0x97, 0x97, 0xea, 0x5b]};
-const GUID IID_IDirectDrawSurface		= {0x6C14DB81, 0xA733, 0x11CE, [0xA5, 0x21, 0x00, 0x20, 0xAF, 0x0B, 0xE5, 0x60]};
-const GUID IID_IDirectDrawSurface2		= {0x57805885, 0x6eec, 0x11cf, [0x94, 0x41, 0xa8, 0x23, 0x03, 0xc1, 0x0e, 0x27]};
-const GUID IID_IDirectDrawSurface3		= {0xDA044E00, 0x69B2, 0x11D0, [0xA1, 0xD5, 0x00, 0xAA, 0x00, 0xB8, 0xDF, 0xBB]};
-const GUID IID_IDirectDrawSurface4		= {0x0B2B8630, 0xAD35, 0x11D0, [0x8E, 0xA6, 0x00, 0x60, 0x97, 0x97, 0xEA, 0x5B]};
-const GUID IID_IDirectDrawSurface7		= {0x06675a80, 0x3b9b, 0x11d2, [0xb9, 0x2f, 0x00, 0x60, 0x97, 0x97, 0xea, 0x5b]};
-const GUID IID_IDirectDrawPalette		= {0x6C14DB84, 0xA733, 0x11CE, [0xA5, 0x21, 0x00, 0x20, 0xAF, 0x0B, 0xE5, 0x60]};
-const GUID IID_IDirectDrawClipper		= {0x6C14DB85, 0xA733, 0x11CE, [0xA5, 0x21, 0x00, 0x20, 0xAF, 0x0B, 0xE5, 0x60]};
-const GUID IID_IDirectDrawColorControl	= {0x4B9F0EE0, 0x0D7E, 0x11D0, [0x9B, 0x06, 0x00, 0xA0, 0xC9, 0x03, 0xA3, 0xB8]};
-const GUID IID_IDirectDrawGammaControl	= {0x69C11C3E, 0xB46B, 0x11D1, [0xAD, 0x7A, 0x00, 0xC0, 0x4F, 0xC2, 0x9B, 0x4E]};
+immutable GUID CLSID_DirectDraw				= {0xD7B70EE0, 0x4340, 0x11CF, [0xB0, 0x63, 0x00, 0x20, 0xAF, 0xC2, 0xCD, 0x35]};
+immutable GUID CLSID_DirectDraw7			= {0x3c305196, 0x50db, 0x11d3, [0x9c, 0xfe, 0x00, 0xc0, 0x4f, 0xd9, 0x30, 0xc5]};
+immutable GUID CLSID_DirectDrawClipper		= {0x593817A0, 0x7DB3, 0x11CF, [0xA2, 0xDE, 0x00, 0xAA, 0x00, 0xb9, 0x33, 0x56]};
+immutable GUID IID_IDirectDraw				= {0x6C14DB80, 0xA733, 0x11CE, [0xA5, 0x21, 0x00, 0x20, 0xAF, 0x0B, 0xE5, 0x60]};
+immutable GUID IID_IDirectDraw2				= {0xB3A6F3E0, 0x2B43, 0x11CF, [0xA2, 0xDE, 0x00, 0xAA, 0x00, 0xB9, 0x33, 0x56]};
+immutable GUID IID_IDirectDraw4				= {0x9c59509a, 0x39bd, 0x11d1, [0x8c, 0x4a, 0x00, 0xc0, 0x4f, 0xd9, 0x30, 0xc5]};
+immutable GUID IID_IDirectDraw7				= {0x15e65ec0, 0x3b9c, 0x11d2, [0xb9, 0x2f, 0x00, 0x60, 0x97, 0x97, 0xea, 0x5b]};
+immutable GUID IID_IDirectDrawSurface		= {0x6C14DB81, 0xA733, 0x11CE, [0xA5, 0x21, 0x00, 0x20, 0xAF, 0x0B, 0xE5, 0x60]};
+immutable GUID IID_IDirectDrawSurface2		= {0x57805885, 0x6eec, 0x11cf, [0x94, 0x41, 0xa8, 0x23, 0x03, 0xc1, 0x0e, 0x27]};
+immutable GUID IID_IDirectDrawSurface3		= {0xDA044E00, 0x69B2, 0x11D0, [0xA1, 0xD5, 0x00, 0xAA, 0x00, 0xB8, 0xDF, 0xBB]};
+immutable GUID IID_IDirectDrawSurface4		= {0x0B2B8630, 0xAD35, 0x11D0, [0x8E, 0xA6, 0x00, 0x60, 0x97, 0x97, 0xEA, 0x5B]};
+immutable GUID IID_IDirectDrawSurface7		= {0x06675a80, 0x3b9b, 0x11d2, [0xb9, 0x2f, 0x00, 0x60, 0x97, 0x97, 0xea, 0x5b]};
+immutable GUID IID_IDirectDrawPalette		= {0x6C14DB84, 0xA733, 0x11CE, [0xA5, 0x21, 0x00, 0x20, 0xAF, 0x0B, 0xE5, 0x60]};
+immutable GUID IID_IDirectDrawClipper		= {0x6C14DB85, 0xA733, 0x11CE, [0xA5, 0x21, 0x00, 0x20, 0xAF, 0x0B, 0xE5, 0x60]};
+immutable GUID IID_IDirectDrawColorControl	= {0x4B9F0EE0, 0x0D7E, 0x11D0, [0x9B, 0x06, 0x00, 0xA0, 0xC9, 0x03, 0xA3, 0xB8]};
+immutable GUID IID_IDirectDrawGammaControl	= {0x69C11C3E, 0xB46B, 0x11D1, [0xAD, 0x7A, 0x00, 0xC0, 0x4F, 0xC2, 0x9B, 0x4E]};
 
 /*
  * INTERACES FOLLOW:
@@ -126,7 +126,12 @@ const GUID IID_IDirectDrawGammaControl	= {0x69C11C3E, 0xB46B, 0x11D1, [0xAD, 0x7
  *	  IDirectDrawSurface
  */
 
-extern(Windows):
+alias IDirectDrawSurface  = IDirectDrawSurfaceB!(1);
+alias IDirectDrawSurface2 = IDirectDrawSurfaceB!(2);
+alias IDirectDrawSurface3 = IDirectDrawSurfaceB!(3);
+alias IDirectDrawSurface4 = IDirectDrawSurfaceB!(4);
+alias IDirectDrawSurface7 = IDirectDrawSurfaceB!(7);
+
 /**
  * IDirectDrawSurface and related interfaces
  */
@@ -162,77 +167,71 @@ private
 	else
 		alias LPDIRECTDRAWSURFACE7 LPProperDirectDrawSurface;
 }
-	HRESULT  AddAttachedSurface(LPProperDirectDrawSurface );
-	HRESULT  AddOverlayDirtyRect(LPRECT );
-	HRESULT  Blt(LPRECT, LPProperDirectDrawSurface, LPRECT, DWORD, LPDDBLTFX );
-	HRESULT  BltBatch(LPDDBLTBATCH, DWORD, DWORD );
-	HRESULT  BltFast(DWORD, DWORD, LPProperDirectDrawSurface, LPRECT, DWORD );
-	HRESULT  DeleteAttachedSurface(DWORD, LPProperDirectDrawSurface );
-	HRESULT  EnumAttachedSurfaces(LPVOID, LPProperDDEnumSurfacesCallback );
-	HRESULT  EnumOverlayZOrders(DWORD, LPVOID, LPProperDDEnumSurfacesCallback );
-	HRESULT  Flip(LPProperDirectDrawSurface, DWORD );
-	HRESULT  GetAttachedSurface(LPProperDDSCaps, LPProperDirectDrawSurface *);
-	HRESULT  GetBltStatus(DWORD );
-	HRESULT  GetCaps(LPProperDDSCaps );
-	HRESULT  GetClipper(LPDIRECTDRAWCLIPPER *);
-	HRESULT  GetColorKey(DWORD, LPDDCOLORKEY );
-	HRESULT  GetDC(HDC *);
-	HRESULT  GetFlipStatus(DWORD );
-	HRESULT  GetOverlayPosition(LPLONG, LPLONG );
-	HRESULT  GetPalette(LPDIRECTDRAWPALETTE *);
-	HRESULT  GetPixelFormat(LPDDPIXELFORMAT );
-	HRESULT  GetSurfaceDesc(LPProperDDSurfaceDesc );
-	HRESULT  Initialize(LPDIRECTDRAW, LPProperDDSurfaceDesc ); // LPDIRECTDRA is correct
-	HRESULT  IsLost();
-	HRESULT  Lock(LPRECT, LPProperDDSurfaceDesc, DWORD, HANDLE );
-	HRESULT  ReleaseDC(HDC );
-	HRESULT  Restore();
-	HRESULT  SetClipper(LPDIRECTDRAWCLIPPER );
-	HRESULT  SetColorKey(DWORD, LPDDCOLORKEY );
-	HRESULT  SetOverlayPosition(LONG, LONG );
-	HRESULT  SetPalette(LPDIRECTDRAWPALETTE );
-	HRESULT  Unlock(LPRECT ); // was LPVOID before ver4
-	HRESULT  UpdateOverlay(LPRECT, LPProperDirectDrawSurface, LPRECT, DWORD, LPDDOVERLAYFX );
-	HRESULT  UpdateOverlayDisplay(DWORD );
-	HRESULT  UpdateOverlayZOrder(DWORD, LPProperDirectDrawSurface );
+	DDRESULT AddAttachedSurface(LPProperDirectDrawSurface );
+	DDRESULT AddOverlayDirtyRect(LPRECT );
+	DDRESULT Blt(LPRECT, LPProperDirectDrawSurface, LPRECT, DWORD, LPDDBLTFX );
+	DDRESULT BltBatch(LPDDBLTBATCH, DWORD, DWORD );
+	DDRESULT BltFast(DWORD, DWORD, LPProperDirectDrawSurface, LPRECT, DWORD );
+	DDRESULT DeleteAttachedSurface(DWORD, LPProperDirectDrawSurface );
+	DDRESULT EnumAttachedSurfaces(LPVOID, LPProperDDEnumSurfacesCallback );
+	DDRESULT EnumOverlayZOrders(DWORD, LPVOID, LPProperDDEnumSurfacesCallback );
+	DDRESULT Flip(LPProperDirectDrawSurface, DWORD );
+	DDRESULT GetAttachedSurface(LPProperDDSCaps, LPProperDirectDrawSurface *);
+	DDRESULT GetBltStatus(DWORD );
+	DDRESULT GetCaps(LPProperDDSCaps );
+	DDRESULT GetClipper(LPDIRECTDRAWCLIPPER *);
+	DDRESULT GetColorKey(DWORD, LPDDCOLORKEY );
+	DDRESULT GetDC(HDC *);
+	DDRESULT GetFlipStatus(DWORD );
+	DDRESULT GetOverlayPosition(LPLONG, LPLONG );
+	DDRESULT GetPalette(LPDIRECTDRAWPALETTE *);
+	DDRESULT GetPixelFormat(LPDDPIXELFORMAT );
+	DDRESULT GetSurfaceDesc(LPProperDDSurfaceDesc );
+	DDRESULT Initialize(LPDIRECTDRAW, LPProperDDSurfaceDesc ); // LPDIRECTDRA is correct
+	DDRESULT IsLost();
+	DDRESULT Lock(LPRECT, LPProperDDSurfaceDesc, DWORD, HANDLE );
+	DDRESULT ReleaseDC(HDC );
+	DDRESULT Restore();
+	DDRESULT SetClipper(LPDIRECTDRAWCLIPPER );
+	DDRESULT SetColorKey(DWORD, LPDDCOLORKEY );
+	DDRESULT SetOverlayPosition(LONG, LONG );
+	DDRESULT SetPalette(LPDIRECTDRAWPALETTE );
+	DDRESULT Unlock(LPRECT ); // was LPVOID before ver4
+	DDRESULT UpdateOverlay(LPRECT, LPProperDirectDrawSurface, LPRECT, DWORD, LPDDOVERLAYFX );
+	DDRESULT UpdateOverlayDisplay(DWORD );
+	DDRESULT UpdateOverlayZOrder(DWORD, LPProperDirectDrawSurface );
 	
 	// IDirectDrawSurface2
 	static if (ver >= 2)
 	{
-		HRESULT  GetDDInterface(LPVOID *);
-		HRESULT  PageLock(DWORD );
-		HRESULT  PageUnlock(DWORD );
+		DDRESULT GetDDInterface(LPVOID *);
+		DDRESULT PageLock(DWORD );
+		DDRESULT PageUnlock(DWORD );
 	}
 	
 	// IDirectDrawSurface3
 	static if (ver >= 3)
-		HRESULT  SetSurfaceDesc(LPProperDDSurfaceDesc, DWORD );
+		DDRESULT SetSurfaceDesc(LPProperDDSurfaceDesc, DWORD );
 
 	// IDirectDrawSurface4
 	static if (ver >= 4)
 	{
-		HRESULT  SetPrivateData(GUID *, LPVOID, DWORD, DWORD );
-		HRESULT  GetPrivateData(GUID *, LPVOID, LPDWORD );
-		HRESULT  FreePrivateData(GUID *);
-		HRESULT  GetUniquenessValue(LPDWORD );
-		HRESULT  ChangeUniquenessValue();
+		DDRESULT SetPrivateData(GUID *, LPVOID, DWORD, DWORD );
+		DDRESULT GetPrivateData(GUID *, LPVOID, LPDWORD );
+		DDRESULT FreePrivateData(GUID *);
+		DDRESULT GetUniquenessValue(LPDWORD );
+		DDRESULT ChangeUniquenessValue();
 	}
 	
 	// IDirectDrawSurface7 from Texture7 methods
 	static if (ver >= 7)
 	{
-		HRESULT  SetPriority(DWORD );
-		HRESULT  GetPriority(LPDWORD );
-		HRESULT  SetLOD(DWORD );
-		HRESULT  GetLOD(LPDWORD );
+		DDRESULT SetPriority(DWORD );
+		DDRESULT GetPriority(LPDWORD );
+		DDRESULT SetLOD(DWORD );
+		DDRESULT GetLOD(LPDWORD );
 	}
 }
-
-alias IDirectDrawSurfaceB!(1) IDirectDrawSurface;
-alias IDirectDrawSurfaceB!(2) IDirectDrawSurface2;
-alias IDirectDrawSurfaceB!(3) IDirectDrawSurface3;
-alias IDirectDrawSurfaceB!(4) IDirectDrawSurface4;
-alias IDirectDrawSurfaceB!(7) IDirectDrawSurface7;
 
 
 /*============================================================================
@@ -310,45 +309,45 @@ private
 		alias LPDDDEVICEIDENTIFIER2 LPProperDDDeviceIdentifier;
 }
 
-	HRESULT  Compact();
-	HRESULT  CreateClipper(DWORD, LPDIRECTDRAWCLIPPER *, IUnknown *);
-	HRESULT  CreatePalette(DWORD, LPPALETTEENTRY, LPDIRECTDRAWPALETTE *, IUnknown *);
-	HRESULT  CreateSurface(LPProperSurfaceDesc, LPProperDirectDrawSurface *, IUnknown *);
-	HRESULT  DuplicateSurface(LPProperDirectDrawSurface, LPProperDirectDrawSurface *);
-	HRESULT  EnumDisplayModes(DWORD, LPProperSurfaceDesc, LPVOID, LPProperDDEnumModesCallback );
-	HRESULT  EnumSurfaces(DWORD, LPProperSurfaceDesc, LPVOID, LPProperDDEnumSurfacesCallback );
-	HRESULT  FlipToGDISurface();
-	HRESULT  GetCaps(LPDDCAPS, LPDDCAPS );
-	HRESULT  GetDisplayMode(LPProperSurfaceDesc );
-	HRESULT  GetFourCCCodes(LPDWORD, LPDWORD );
-	HRESULT  GetGDISurface(LPProperDirectDrawSurface *);
-	HRESULT  GetMonitorFrequency(LPDWORD );
-	HRESULT  GetScanLine(LPDWORD );
-	HRESULT  GetVerticalBlankStatus(LPBOOL );
-	HRESULT  Initialize(GUID *);
-	HRESULT  RestoreDisplayMode();
-	HRESULT  SetCooperativeLevel(HWND, DWORD );
+	DDRESULT Compact();
+	DDRESULT CreateClipper(DWORD, LPDIRECTDRAWCLIPPER *, IUnknown *);
+	DDRESULT CreatePalette(DWORD, LPPALETTEENTRY, LPDIRECTDRAWPALETTE *, IUnknown *);
+	DDRESULT CreateSurface(LPProperSurfaceDesc, LPProperDirectDrawSurface *, IUnknown *);
+	DDRESULT DuplicateSurface(LPProperDirectDrawSurface, LPProperDirectDrawSurface *);
+	DDRESULT EnumDisplayModes(DWORD, LPProperSurfaceDesc, LPVOID, LPProperDDEnumModesCallback );
+	DDRESULT EnumSurfaces(DWORD, LPProperSurfaceDesc, LPVOID, LPProperDDEnumSurfacesCallback );
+	DDRESULT FlipToGDISurface();
+	DDRESULT GetCaps(LPDDCAPS, LPDDCAPS );
+	DDRESULT GetDisplayMode(LPProperSurfaceDesc );
+	DDRESULT GetFourCCCodes(LPDWORD, LPDWORD );
+	DDRESULT GetGDISurface(LPProperDirectDrawSurface *);
+	DDRESULT GetMonitorFrequency(LPDWORD );
+	DDRESULT GetScanLine(LPDWORD );
+	DDRESULT GetVerticalBlankStatus(LPBOOL );
+	DDRESULT Initialize(GUID *);
+	DDRESULT RestoreDisplayMode();
+	DDRESULT SetCooperativeLevel(HWND, DWORD );
 	static if (ver < 2)
-		HRESULT  SetDisplayMode(DWORD, DWORD, DWORD );
+		DDRESULT SetDisplayMode(DWORD, DWORD, DWORD );
 	else
-		HRESULT  SetDisplayMode(DWORD, DWORD, DWORD, DWORD, DWORD );
-	HRESULT  WaitForVerticalBlank(DWORD, HANDLE );
+		DDRESULT SetDisplayMode(DWORD, DWORD, DWORD, DWORD, DWORD );
+	DDRESULT WaitForVerticalBlank(DWORD, HANDLE );
 	
 	static if(ver >= 2)
-		HRESULT  GetAvailableVidMem(LPProperDDSCaps, LPDWORD, LPDWORD );
+		DDRESULT GetAvailableVidMem(LPProperDDSCaps, LPDWORD, LPDWORD );
 	
 	static if(ver >= 4)
 	{
-		HRESULT  GetSurfaceFromDC(HDC, LPProperDirectDrawSurface *);
-		HRESULT  RestoreAllSurfaces();
-		HRESULT  TestCooperativeLevel();
-		HRESULT  GetDeviceIdentifier(LPProperDDDeviceIdentifier, DWORD );
+		DDRESULT GetSurfaceFromDC(HDC, LPProperDirectDrawSurface *);
+		DDRESULT RestoreAllSurfaces();
+		DDRESULT TestCooperativeLevel();
+		DDRESULT GetDeviceIdentifier(LPProperDDDeviceIdentifier, DWORD );
 	}
 	
 	static if(ver >= 7)
 	{
-		HRESULT  StartModeTest(LPSIZE, DWORD, DWORD );
-		HRESULT  EvaluateMode(DWORD, DWORD *);
+		DDRESULT StartModeTest(LPSIZE, DWORD, DWORD );
+		DDRESULT EvaluateMode(DWORD, DWORD *);
 	}
 }
 
@@ -357,10 +356,10 @@ private
  */
 interface IDirectDrawPalette : IUnknown
 {
-	HRESULT  GetCaps(LPDWORD );
-	HRESULT  GetEntries(DWORD, DWORD, DWORD, LPPALETTEENTRY );
-	HRESULT  Initialize(LPDIRECTDRAW, DWORD, LPPALETTEENTRY );
-	HRESULT  SetEntries(DWORD, DWORD, DWORD, LPPALETTEENTRY );
+	DDRESULT GetCaps(LPDWORD );
+	DDRESULT GetEntries(DWORD, DWORD, DWORD, LPPALETTEENTRY );
+	DDRESULT Initialize(LPDIRECTDRAW, DWORD, LPPALETTEENTRY );
+	DDRESULT SetEntries(DWORD, DWORD, DWORD, LPPALETTEENTRY );
 }
 
 /**
@@ -368,12 +367,12 @@ interface IDirectDrawPalette : IUnknown
  */
 interface IDirectDrawClipper : IUnknown
 {
-	HRESULT  GetClipList(LPRECT, LPRGNDATA, LPDWORD );
-	HRESULT  GetHWnd(HWND *);
-	HRESULT  Initialize(LPDIRECTDRAW, DWORD );
-	HRESULT  IsClipListChanged(BOOL *);
-	HRESULT  SetClipList(LPRGNDATA, DWORD );
-	HRESULT  SetHWnd(DWORD, HWND );
+	DDRESULT GetClipList(LPRECT, LPRGNDATA, LPDWORD );
+	DDRESULT GetHWnd(HWND *);
+	DDRESULT Initialize(LPDIRECTDRAW, DWORD );
+	DDRESULT IsClipListChanged(BOOL *);
+	DDRESULT SetClipList(LPRGNDATA, DWORD );
+	DDRESULT SetHWnd(DWORD, HWND );
 }
 
 /**
@@ -381,8 +380,8 @@ interface IDirectDrawClipper : IUnknown
  */
 interface IDirectDrawColorControl : IUnknown
 {
-	HRESULT  GetColorControls(LPDDCOLORCONTROL );
-	HRESULT  SetColorControls(LPDDCOLORCONTROL );
+	DDRESULT GetColorControls(LPDDCOLORCONTROL );
+	DDRESULT SetColorControls(LPDDCOLORCONTROL );
 }
 
 /**
@@ -390,31 +389,28 @@ interface IDirectDrawColorControl : IUnknown
  */
 interface IDirectDrawGammaControl : IUnknown
 {
-	HRESULT  GetGammaRamp(DWORD, LPDDGAMMARAMP );
-	HRESULT  SetGammaRamp(DWORD, LPDDGAMMARAMP );
+	DDRESULT GetGammaRamp(DWORD, LPDDGAMMARAMP );
+	DDRESULT SetGammaRamp(DWORD, LPDDGAMMARAMP );
 }
 
-extern(C):
 /*
  * API's
  */
-//#if defined( _WIN32 ) && !defined( _NO_ENUM )
 alias BOOL  function(GUID *, LPSTR, LPSTR, LPVOID )LPDDENUMCALLBACKA;
 alias BOOL  function(GUID *, LPWSTR, LPWSTR, LPVOID )LPDDENUMCALLBACKW;
-extern (Windows):
-HRESULT  DirectDrawEnumerateW(LPDDENUMCALLBACKW lpCallback, LPVOID lpContext);
-HRESULT  DirectDrawEnumerateA(LPDDENUMCALLBACKA lpCallback, LPVOID lpContext);
-	/*
-	 * Protect against old SDKs
-	 */
-extern (C):
+
+DDRESULT DirectDrawEnumerateW(LPDDENUMCALLBACKW lpCallback, LPVOID lpContext);
+DDRESULT DirectDrawEnumerateA(LPDDENUMCALLBACKA lpCallback, LPVOID lpContext);
+
+static assert(functionLinkage!LPDDENUMCALLBACKA == "Windows");
+static assert(functionLinkage!DirectDrawEnumerateA == "Windows");
+
+
 alias HANDLE HMONITOR;
 alias BOOL  function(GUID *, LPSTR, LPSTR, LPVOID, HMONITOR )LPDDENUMCALLBACKEXA;
 alias BOOL  function(GUID *, LPWSTR, LPWSTR, LPVOID, HMONITOR )LPDDENUMCALLBACKEXW;
-extern (Windows):
-HRESULT  DirectDrawEnumerateExW(LPDDENUMCALLBACKEXW lpCallback, LPVOID lpContext, DWORD dwFlags);
-HRESULT  DirectDrawEnumerateExA(LPDDENUMCALLBACKEXA lpCallback, LPVOID lpContext, DWORD dwFlags);
-extern (C):
+DDRESULT DirectDrawEnumerateExW(LPDDENUMCALLBACKEXW lpCallback, LPVOID lpContext, DWORD dwFlags);
+DDRESULT DirectDrawEnumerateExA(LPDDENUMCALLBACKEXA lpCallback, LPVOID lpContext, DWORD dwFlags);
 alias HRESULT  function(LPDDENUMCALLBACKEXA lpCallback, LPVOID lpContext, DWORD dwFlags)LPDIRECTDRAWENUMERATEEXA;
 alias HRESULT  function(LPDDENUMCALLBACKEXW lpCallback, LPVOID lpContext, DWORD dwFlags)LPDIRECTDRAWENUMERATEEXW;
 
@@ -424,9 +420,9 @@ alias LPDDENUMCALLBACKEXA LPDDENUMCALLBACKEX;
 alias LPDIRECTDRAWENUMERATEEXA LPDIRECTDRAWENUMERATEEX;
 alias DirectDrawEnumerateExA DirectDrawEnumerateEx;
 extern (Windows):
-HRESULT  DirectDrawCreate(GUID *lpGUID, LPDIRECTDRAW *lplpDD, IUnknown *pUnkOuter);
-HRESULT  DirectDrawCreateEx(GUID *lpGuid, LPVOID *lplpDD, const ref IID iid, IUnknown *pUnkOuter);
-HRESULT  DirectDrawCreateClipper(DWORD dwFlags, LPDIRECTDRAWCLIPPER *lplpDDClipper, IUnknown *pUnkOuter);
+DDRESULT DirectDrawCreate(GUID *lpGUID, LPDIRECTDRAW *lplpDD, IUnknown *pUnkOuter);
+DDRESULT DirectDrawCreateEx(GUID *lpGuid, LPVOID *lplpDD, const ref IID iid, IUnknown *pUnkOuter);
+DDRESULT DirectDrawCreateClipper(DWORD dwFlags, LPDIRECTDRAWCLIPPER *lplpDDClipper, IUnknown *pUnkOuter);
 /*
  * Flags for DirectDrawEnumerateEx
  * DirectDrawEnumerateEx supercedes DirectDrawEnumerate. You must use GetProcAddress to
@@ -458,14 +454,12 @@ const DDCREATE_HARDWAREONLY = 0x00000001;
 
 const DDCREATE_EMULATIONONLY = 0x00000002;
 
-//#ifndef WINNT
-extern (C):
-alias HRESULT  function(LPDDSURFACEDESC, LPVOID )LPDDENUMMODESCALLBACK;
-alias HRESULT  function(LPDDSURFACEDESC2, LPVOID )LPDDENUMMODESCALLBACK2;
-alias HRESULT  function(LPDIRECTDRAWSURFACE, LPDDSURFACEDESC, LPVOID )LPDDENUMSURFACESCALLBACK;
-alias HRESULT  function(LPDIRECTDRAWSURFACE4, LPDDSURFACEDESC2, LPVOID )LPDDENUMSURFACESCALLBACK2;
-alias HRESULT  function(LPDIRECTDRAWSURFACE7, LPDDSURFACEDESC2, LPVOID )LPDDENUMSURFACESCALLBACK7;
-//#endif
+alias LPDDENUMMODESCALLBACK  = HRESULT function(LPDDSURFACEDESC,  LPVOID);
+alias LPDDENUMMODESCALLBACK2 = HRESULT function(LPDDSURFACEDESC2, LPVOID);
+
+alias LPDDENUMSURFACESCALLBACK  = HRESULT function(LPDIRECTDRAWSURFACE,  LPDDSURFACEDESC,  LPVOID);
+alias LPDDENUMSURFACESCALLBACK2 = HRESULT function(LPDIRECTDRAWSURFACE4, LPDDSURFACEDESC2, LPVOID);
+alias LPDDENUMSURFACESCALLBACK7 = HRESULT function(LPDIRECTDRAWSURFACE7, LPDDSURFACEDESC2, LPVOID);
 
 /**
  * Generic pixel format with 8-bit RGB and alpha components
@@ -4187,295 +4181,362 @@ const DDEM_MODEPASSED = 0x00000001;
 
 const DDEM_MODEFAILED = 0x00000002;
 
+
 /*===========================================================================
- *
- *
- * DIRECTDRAW RETURN CODES
- *
- * The return values from DirectDraw Commands and Surface that return an HRESULT
- * are codes from DirectDraw concerning the results of the action
- * requested by DirectDraw.
- *
- *==========================================================================*/
+*
+*
+* DIRECTDRAW RETURN CODES
+*
+* The return values from DirectDraw Commands and Surface that return an HRESULT
+* are codes from DirectDraw concerning the results of the action
+* requested by DirectDraw.
+*
+*==========================================================================*/
 
-/*
- * Status is OK
- *
- * Issued by: DirectDraw Commands and all callbacks
- */
-alias S_OK DD_OK;
+enum _FACDD = 0x876;
+pure HRESULT MAKE_DDHRESULT(uint code)
+{
+	return MAKE_HRESULT( 1, _FACDD, code );
+}
 
-alias S_FALSE DD_FALSE;
+/// Create an HRESULT value from component pieces
+pure HRESULT MAKE_HRESULT(uint sev, uint fac, uint code)
+{
+	return (sev << 31) | (fac << 16) | (code);
+}
+
+
 /****************************************************************************
- *
- * DIRECTDRAW ENUMCALLBACK RETURN VALUES
- *
- * EnumCallback returns are used to control the flow of the DIRECTDRAW and
- * DIRECTDRAWSURFACE object enumerations.   They can only be returned by
- * enumeration callback routines.
- *
- ****************************************************************************/
+*
+* DIRECTDRAW ENUMCALLBACK RETURN VALUES
+*
+* EnumCallback returns are used to control the flow of the DIRECTDRAW and
+* DIRECTDRAWSURFACE object enumerations.   They can only be returned by
+* enumeration callback routines.
+*
+****************************************************************************/
 
 /*
- * stop the enumeration
- */
+* stop the enumeration
+*/
+enum DDENUMRET_CANCEL = 0;
 
-const DDENUMRET_CANCEL = 0;
 /*
- * continue the enumeration
- */
+* continue the enumeration
+*/
+enum DDENUMRET_OK = 1;
 
-const DDENUMRET_OK = 1;
+mixin(bringToCurrentScope!DDRESULT);
+
 /****************************************************************************
- *
- * DIRECTDRAW ERRORS
- *
- * Errors are represented by negative values and cannot be combined.
- *
- ****************************************************************************/
+*
+* DIRECTDRAW ERRORS
+*
+* Errors are represented by negative values and cannot be combined.
+*
+****************************************************************************/
+enum DDRESULT : HRESULT
+{
+	/*
+	 * Status is OK
+	 *
+	 * Issued by: DirectDraw Commands and all callbacks
+	 */
+	DD_OK = S_OK,
+	DD_FALSE = S_FALSE,
 
 /*
  * This object is already initialized
  */
+	DDERR_ALREADYINITIALIZED = MAKE_DDHRESULT(5),
 
 /*
  * This surface can not be attached to the requested surface.
  */
+	DDERR_CANNOTATTACHSURFACE = MAKE_DDHRESULT(10),
 
 /*
  * This surface can not be detached from the requested surface.
  */
+	DDERR_CANNOTDETACHSURFACE = MAKE_DDHRESULT(20),
 
 /*
  * Support is currently not available.
  */
+	DDERR_CURRENTLYNOTAVAIL = MAKE_DDHRESULT(40),
 
 /*
  * An exception was encountered while performing the requested operation
  */
+	DDERR_EXCEPTION = MAKE_DDHRESULT(55),
 
 /*
  * Generic failure.
  */
+	DDERR_GENERIC = E_FAIL,
 
-alias E_FAIL DDERR_GENERIC;
 /*
  * Height of rectangle provided is not a multiple of reqd alignment
  */
+	DDERR_HEIGHTALIGN = MAKE_DDHRESULT(90),
 
 /*
  * Unable to match primary surface creation request with existing
  * primary surface.
  */
+	DDERR_INCOMPATIBLEPRIMARY = MAKE_DDHRESULT(95),
 
 /*
  * One or more of the caps bits passed to the callback are incorrect.
  */
+	DDERR_INVALIDCAPS = MAKE_DDHRESULT(100),
 
 /*
  * DirectDraw does not support provided Cliplist.
  */
+	DDERR_INVALIDCLIPLIST = MAKE_DDHRESULT(110),
 
 /*
  * DirectDraw does not support the requested mode
  */
+	DDERR_INVALIDMODE = MAKE_DDHRESULT(120),
 
 /*
  * DirectDraw received a pointer that was an invalid DIRECTDRAW object.
  */
+	DDERR_INVALIDOBJECT = MAKE_DDHRESULT(130),
 
 /*
  * One or more of the parameters passed to the callback function are
  * incorrect.
  */
+	DDERR_INVALIDPARAMS = E_INVALIDARG,
 
-alias E_INVALIDARG DDERR_INVALIDPARAMS;
 /*
  * pixel format was invalid as specified
  */
+	DDERR_INVALIDPIXELFORMAT = MAKE_DDHRESULT(145),
 
 /*
  * Rectangle provided was invalid.
  */
+	DDERR_INVALIDRECT = MAKE_DDHRESULT(150),
 
 /*
  * Operation could not be carried out because one or more surfaces are locked
  */
+	DDERR_LOCKEDSURFACES = MAKE_DDHRESULT(160),
 
 /*
  * There is no 3D present.
  */
+	DDERR_NO3D = MAKE_DDHRESULT(170),
 
 /*
  * Operation could not be carried out because there is no alpha accleration
  * hardware present or available.
  */
+	DDERR_NOALPHAHW = MAKE_DDHRESULT(180),
 
 /*
  * Operation could not be carried out because there is no stereo
  * hardware present or available.
  */
+	DDERR_NOSTEREOHARDWARE = MAKE_DDHRESULT(181),
 
 /*
  * Operation could not be carried out because there is no hardware
  * present which supports stereo surfaces
  */
+	DDERR_NOSURFACELEFT = MAKE_DDHRESULT(182),
 
 
 
 /*
  * no clip list available
  */
+	DDERR_NOCLIPLIST = MAKE_DDHRESULT(205),
 
 /*
  * Operation could not be carried out because there is no color conversion
  * hardware present or available.
  */
+	DDERR_NOCOLORCONVHW = MAKE_DDHRESULT(210),
 
 /*
  * Create function called without DirectDraw object method SetCooperativeLevel
  * being called.
  */
+	DDERR_NOCOOPERATIVELEVELSET = MAKE_DDHRESULT(212),
 
 /*
  * Surface doesn't currently have a color key
  */
+	DDERR_NOCOLORKEY = MAKE_DDHRESULT(215),
 
 /*
  * Operation could not be carried out because there is no hardware support
  * of the dest color key.
  */
+	DDERR_NOCOLORKEYHW = MAKE_DDHRESULT(220),
 
 /*
  * No DirectDraw support possible with current display driver
  */
+	DDERR_NODIRECTDRAWSUPPORT = MAKE_DDHRESULT(222),
 
 /*
  * Operation requires the application to have exclusive mode but the
  * application does not have exclusive mode.
  */
+	DDERR_NOEXCLUSIVEMODE = MAKE_DDHRESULT(225),
 
 /*
  * Flipping visible surfaces is not supported.
  */
+	DDERR_NOFLIPHW = MAKE_DDHRESULT(230),
 
 /*
  * There is no GDI present.
  */
+	DDERR_NOGDI = MAKE_DDHRESULT(240),
 
 /*
  * Operation could not be carried out because there is no hardware present
  * or available.
  */
+	DDERR_NOMIRRORHW = MAKE_DDHRESULT(250),
 
 /*
  * Requested item was not found
  */
+	DDERR_NOTFOUND = MAKE_DDHRESULT(255),
 
 /*
  * Operation could not be carried out because there is no overlay hardware
  * present or available.
  */
+	DDERR_NOOVERLAYHW = MAKE_DDHRESULT(260),
 
 /*
  * Operation could not be carried out because the source and destination
  * rectangles are on the same surface and overlap each other.
  */
+	DDERR_OVERLAPPINGRECTS = MAKE_DDHRESULT(270),
 
 /*
  * Operation could not be carried out because there is no appropriate raster
  * op hardware present or available.
  */
+	DDERR_NORASTEROPHW = MAKE_DDHRESULT(280),
 
 /*
  * Operation could not be carried out because there is no rotation hardware
  * present or available.
  */
+	DDERR_NOROTATIONHW = MAKE_DDHRESULT(290),
 
 /*
  * Operation could not be carried out because there is no hardware support
  * for stretching
  */
+	DDERR_NOSTRETCHHW = MAKE_DDHRESULT(310),
 
 /*
  * DirectDrawSurface is not in 4 bit color palette and the requested operation
  * requires 4 bit color palette.
  */
+	DDERR_NOT4BITCOLOR = MAKE_DDHRESULT(316),
 
 /*
  * DirectDrawSurface is not in 4 bit color index palette and the requested
  * operation requires 4 bit color index palette.
  */
+	DDERR_NOT4BITCOLORINDEX = MAKE_DDHRESULT(317),
 
 /*
  * DirectDraw Surface is not in 8 bit color mode and the requested operation
  * requires 8 bit color.
  */
+	DDERR_NOT8BITCOLOR = MAKE_DDHRESULT(320),
 
 /*
  * Operation could not be carried out because there is no texture mapping
  * hardware present or available.
  */
+	DDERR_NOTEXTUREHW = MAKE_DDHRESULT(330),
 
 /*
  * Operation could not be carried out because there is no hardware support
  * for vertical blank synchronized operations.
  */
+	DDERR_NOVSYNCHW = MAKE_DDHRESULT(335),
 
 /*
  * Operation could not be carried out because there is no hardware support
  * for zbuffer blting.
  */
+	DDERR_NOZBUFFERHW = MAKE_DDHRESULT(340),
 
 /*
  * Overlay surfaces could not be z layered based on their BltOrder because
  * the hardware does not support z layering of overlays.
  */
+	DDERR_NOZOVERLAYHW = MAKE_DDHRESULT(350),
 
 /*
  * The hardware needed for the requested operation has already been
  * allocated.
  */
+	DDERR_OUTOFCAPS = MAKE_DDHRESULT(360),
 
 /*
  * DirectDraw does not have enough memory to perform the operation.
  */
+	DDERR_OUTOFMEMORY = E_OUTOFMEMORY,
 
-alias E_OUTOFMEMORY DDERR_OUTOFMEMORY;
 /*
  * DirectDraw does not have enough memory to perform the operation.
  */
+	DDERR_OUTOFVIDEOMEMORY = MAKE_DDHRESULT(380),
 
 /*
  * hardware does not support clipped overlays
  */
+	DDERR_OVERLAYCANTCLIP = MAKE_DDHRESULT(382),
 
 /*
  * Can only have ony color key active at one time for overlays
  */
+	DDERR_OVERLAYCOLORKEYONLYONEACTIVE = MAKE_DDHRESULT(384),
 
 /*
  * Access to this palette is being refused because the palette is already
  * locked by another thread.
  */
+	DDERR_PALETTEBUSY = MAKE_DDHRESULT(387),
 
 /*
  * No src color key specified for this operation.
  */
+	DDERR_COLORKEYNOTSET = MAKE_DDHRESULT(400),
 
 /*
  * This surface is already attached to the surface it is being attached to.
  */
+	DDERR_SURFACEALREADYATTACHED = MAKE_DDHRESULT(410),
 
 /*
  * This surface is already a dependency of the surface it is being made a
  * dependency of.
  */
+	DDERR_SURFACEALREADYDEPENDENT = MAKE_DDHRESULT(420),
 
 /*
  * Access to this surface is being refused because the surface is already
  * locked by another thread.
  */
+	DDERR_SURFACEBUSY = MAKE_DDHRESULT(430),
 
 /*
  * Access to this surface is being refused because no driver exists
@@ -4484,295 +4545,359 @@ alias E_OUTOFMEMORY DDERR_OUTOFMEMORY;
  * surface when no DCI provider is present.
  * Will also happen on attempts to lock an optimized surface.
  */
+	DDERR_CANTLOCKSURFACE = MAKE_DDHRESULT(435),
 
 /*
  * Access to Surface refused because Surface is obscured.
  */
+	DDERR_SURFACEISOBSCURED = MAKE_DDHRESULT(440),
 
 /*
  * Access to this surface is being refused because the surface is gone.
  * The DIRECTDRAWSURFACE object representing this surface should
  * have Restore called on it.
  */
+	DDERR_SURFACELOST = MAKE_DDHRESULT(450),
 
 /*
  * The requested surface is not attached.
  */
+	DDERR_SURFACENOTATTACHED = MAKE_DDHRESULT(460),
 
 /*
  * Height requested by DirectDraw is too large.
  */
+	DDERR_TOOBIGHEIGHT = MAKE_DDHRESULT(470),
 
 /*
  * Size requested by DirectDraw is too large --  The individual height and
  * width are OK.
  */
+	DDERR_TOOBIGSIZE = MAKE_DDHRESULT(480),
 
 /*
  * Width requested by DirectDraw is too large.
  */
+	DDERR_TOOBIGWIDTH = MAKE_DDHRESULT(490),
 
 /*
  * Action not supported.
  */
+	DDERR_UNSUPPORTED = E_NOTIMPL,
 
-alias E_NOTIMPL DDERR_UNSUPPORTED;
 /*
  * Pixel format requested is unsupported by DirectDraw
  */
+	DDERR_UNSUPPORTEDFORMAT = MAKE_DDHRESULT(510),
 
 /*
  * Bitmask in the pixel format requested is unsupported by DirectDraw
  */
+	DDERR_UNSUPPORTEDMASK = MAKE_DDHRESULT(520),
 
 /*
  * The specified stream contains invalid data
  */
+	DDERR_INVALIDSTREAM = MAKE_DDHRESULT(521),
 
 /*
  * vertical blank is in progress
  */
+	DDERR_VERTICALBLANKINPROGRESS = MAKE_DDHRESULT(537),
 
 /*
  * Informs DirectDraw that the previous Blt which is transfering information
  * to or from this Surface is incomplete.
  */
+	DDERR_WASSTILLDRAWING = MAKE_DDHRESULT(540),
 
 
 /*
  * The specified surface type requires specification of the COMPLEX flag
  */
+	DDERR_DDSCAPSCOMPLEXREQUIRED = MAKE_DDHRESULT(542),
 
 
 /*
  * Rectangle provided was not horizontally aligned on reqd. boundary
  */
+	DDERR_XALIGN = MAKE_DDHRESULT(560),
 
 /*
  * The GUID passed to DirectDrawCreate is not a valid DirectDraw driver
  * identifier.
  */
+	DDERR_INVALIDDIRECTDRAWGUID = MAKE_DDHRESULT(561),
 
 /*
  * A DirectDraw object representing this driver has already been created
  * for this process.
  */
+	DDERR_DIRECTDRAWALREADYCREATED = MAKE_DDHRESULT(562),
 
 /*
  * A hardware only DirectDraw object creation was attempted but the driver
  * did not support any hardware.
  */
+	DDERR_NODIRECTDRAWHW = MAKE_DDHRESULT(563),
 
 /*
  * this process already has created a primary surface
  */
+	DDERR_PRIMARYSURFACEALREADYEXISTS = MAKE_DDHRESULT(564),
 
 /*
  * software emulation not available.
  */
+	DDERR_NOEMULATION = MAKE_DDHRESULT(565),
 
 /*
  * region passed to Clipper::GetClipList is too small.
  */
+	DDERR_REGIONTOOSMALL = MAKE_DDHRESULT(566),
 
 /*
  * an attempt was made to set a clip list for a clipper objec that
  * is already monitoring an hwnd.
  */
+	DDERR_CLIPPERISUSINGHWND = MAKE_DDHRESULT(567),
 
 /*
  * No clipper object attached to surface object
  */
+	DDERR_NOCLIPPERATTACHED = MAKE_DDHRESULT(568),
 
 /*
  * Clipper notification requires an HWND or
  * no HWND has previously been set as the CooperativeLevel HWND.
  */
+	DDERR_NOHWND = MAKE_DDHRESULT(569),
 
 /*
  * HWND used by DirectDraw CooperativeLevel has been subclassed,
  * this prevents DirectDraw from restoring state.
  */
+	DDERR_HWNDSUBCLASSED = MAKE_DDHRESULT(570),
 
 /*
  * The CooperativeLevel HWND has already been set.
  * It can not be reset while the process has surfaces or palettes created.
  */
+	DDERR_HWNDALREADYSET = MAKE_DDHRESULT(571),
 
 /*
  * No palette object attached to this surface.
  */
+	DDERR_NOPALETTEATTACHED = MAKE_DDHRESULT(572),
 
 /*
  * No hardware support for 16 or 256 color palettes.
  */
+	DDERR_NOPALETTEHW = MAKE_DDHRESULT(573),
 
 /*
  * If a clipper object is attached to the source surface passed into a
  * BltFast call.
  */
+	DDERR_BLTFASTCANTCLIP = MAKE_DDHRESULT(574),
 
 /*
  * No blter.
  */
+	DDERR_NOBLTHW = MAKE_DDHRESULT(575),
 
 /*
  * No DirectDraw ROP hardware.
  */
+	DDERR_NODDROPSHW = MAKE_DDHRESULT(576),
 
 /*
  * returned when GetOverlayPosition is called on a hidden overlay
  */
+	DDERR_OVERLAYNOTVISIBLE = MAKE_DDHRESULT(577),
 
 /*
  * returned when GetOverlayPosition is called on a overlay that UpdateOverlay
  * has never been called on to establish a destionation.
  */
+	DDERR_NOOVERLAYDEST = MAKE_DDHRESULT(578),
 
 /*
  * returned when the position of the overlay on the destionation is no longer
  * legal for that destionation.
  */
+	DDERR_INVALIDPOSITION = MAKE_DDHRESULT(579),
 
 /*
  * returned when an overlay member is called for a non-overlay surface
  */
+	DDERR_NOTAOVERLAYSURFACE = MAKE_DDHRESULT(580),
 
 /*
  * An attempt was made to set the cooperative level when it was already
  * set to exclusive.
  */
+	DDERR_EXCLUSIVEMODEALREADYSET = MAKE_DDHRESULT(581),
 
 /*
  * An attempt has been made to flip a surface that is not flippable.
  */
+	DDERR_NOTFLIPPABLE = MAKE_DDHRESULT(582),
 
 /*
  * Can't duplicate primary & 3D surfaces, or surfaces that are implicitly
  * created.
  */
+	DDERR_CANTDUPLICATE = MAKE_DDHRESULT(583),
 
 /*
  * Surface was not locked.  An attempt to unlock a surface that was not
  * locked at all, or by this process, has been attempted.
  */
+	DDERR_NOTLOCKED = MAKE_DDHRESULT(584),
 
 /*
  * Windows can not create any more DCs, or a DC was requested for a paltte-indexed
  * surface when the surface had no palette AND the display mode was not palette-indexed
  * (in this case DirectDraw cannot select a proper palette into the DC)
  */
+	DDERR_CANTCREATEDC = MAKE_DDHRESULT(585),
 
 /*
  * No DC was ever created for this surface.
  */
+	DDERR_NODC = MAKE_DDHRESULT(586),
 
 /*
  * This surface can not be restored because it was created in a different
  * mode.
  */
+	DDERR_WRONGMODE = MAKE_DDHRESULT(587),
 
 /*
  * This surface can not be restored because it is an implicitly created
  * surface.
  */
+	DDERR_IMPLICITLYCREATED = MAKE_DDHRESULT(588),
 
 /*
  * The surface being used is not a palette-based surface
  */
+	DDERR_NOTPALETTIZED = MAKE_DDHRESULT(589),
 
 
 /*
  * The display is currently in an unsupported mode
  */
+	DDERR_UNSUPPORTEDMODE = MAKE_DDHRESULT(590),
 
 /*
  * Operation could not be carried out because there is no mip-map
  * texture mapping hardware present or available.
  */
+	DDERR_NOMIPMAPHW = MAKE_DDHRESULT(591),
 
 /*
  * The requested action could not be performed because the surface was of
  * the wrong type.
  */
+	DDERR_INVALIDSURFACETYPE = MAKE_DDHRESULT(592),
 
 
 /*
  * Device does not support optimized surfaces, therefore no video memory optimized surfaces
  */
+	DDERR_NOOPTIMIZEHW = MAKE_DDHRESULT(600),
 
 /*
  * Surface is an optimized surface, but has not yet been allocated any memory
  */
+	DDERR_NOTLOADED = MAKE_DDHRESULT(601),
 
 /*
  * Attempt was made to create or set a device window without first setting
  * the focus window
  */
+	DDERR_NOFOCUSWINDOW = MAKE_DDHRESULT(602),
 
 /*
  * Attempt was made to set a palette on a mipmap sublevel
  */
+	DDERR_NOTONMIPMAPSUBLEVEL = MAKE_DDHRESULT(603),
 
 /*
  * A DC has already been returned for this surface. Only one DC can be
  * retrieved per surface.
  */
+	DDERR_DCALREADYCREATED = MAKE_DDHRESULT(620),
 
 /*
  * An attempt was made to allocate non-local video memory from a device
  * that does not support non-local video memory.
  */
+	DDERR_NONONLOCALVIDMEM = MAKE_DDHRESULT(630),
 
 /*
  * The attempt to page lock a surface failed.
  */
+	DDERR_CANTPAGELOCK = MAKE_DDHRESULT(640),
 
 
 /*
  * The attempt to page unlock a surface failed.
  */
+	DDERR_CANTPAGEUNLOCK = MAKE_DDHRESULT(660),
 
 /*
  * An attempt was made to page unlock a surface with no outstanding page locks.
  */
+	DDERR_NOTPAGELOCKED = MAKE_DDHRESULT(680),
 
 /*
  * There is more data available than the specified buffer size could hold
  */
+	DDERR_MOREDATA = MAKE_DDHRESULT(690),
 
 /*
  * The data has expired and is therefore no longer valid.
  */
+	DDERR_EXPIRED = MAKE_DDHRESULT(691),
 
 /*
  * The mode test has finished executing.
  */
+	DDERR_TESTFINISHED = MAKE_DDHRESULT(692),
 
 /*
  * The mode test has switched to a new mode.
  */
+	DDERR_NEWMODE = MAKE_DDHRESULT(693),
 
 /*
  * D3D has not yet been initialized.
  */
+	DDERR_D3DNOTINITIALIZED = MAKE_DDHRESULT(694),
 
 /*
  * The video port is not active
  */
+	DDERR_VIDEONOTACTIVE = MAKE_DDHRESULT(695),
 
 /*
  * The monitor does not have EDID data.
  */
+	DDERR_NOMONITORINFORMATION = MAKE_DDHRESULT(696),
 
 /*
  * The driver does not enumerate display mode refresh rates.
  */
+	DDERR_NODRIVERSUPPORT = MAKE_DDHRESULT(697),
 
 /*
  * Surfaces created by one direct draw device cannot be used directly by
  * another direct draw device.
  */
+	DDERR_DEVICEDOESNTOWNSURFACE = MAKE_DDHRESULT(699),
 
 
 
@@ -4780,7 +4905,5 @@ alias E_NOTIMPL DDERR_UNSUPPORTED;
  * An attempt was made to invoke an interface member of a DirectDraw object
  * created by CoCreateInstance() before it was initialized.
  */
-
-alias CO_E_NOTINITIALIZED DDERR_NOTINITIALIZED;
-
-/* Alpha bit depth constants */
+	DDERR_NOTINITIALIZED = CO_E_NOTINITIALIZED
+}

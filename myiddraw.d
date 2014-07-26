@@ -112,7 +112,7 @@ extern(Windows):
 	}
 	
 	/// 
-	override HRESULT  Compact()
+	override DDRESULT Compact()
 	{
 		auto res = _lpDD.Compact();
 		Logger.addEntry("MyIDirectDraw.Compact() = ", res);
@@ -120,7 +120,7 @@ extern(Windows):
 	}
 	
 	/// 
-	override HRESULT  CreateClipper(DWORD dwFlags, LPDIRECTDRAWCLIPPER* lplpDDClipper, IUnknown* pUnkOuter)
+	override DDRESULT CreateClipper(DWORD dwFlags, LPDIRECTDRAWCLIPPER* lplpDDClipper, IUnknown* pUnkOuter)
 	{
 		auto res = _lpDD.CreateClipper(dwFlags, lplpDDClipper, pUnkOuter);
 		Logger.addEntry("MyIDirectDraw.CreateClipper(", dwFlags, lplpDDClipper, ") = ", res);
@@ -128,9 +128,9 @@ extern(Windows):
 	}
 	
 	/// 
-	override HRESULT  CreatePalette(DWORD dwFlags, LPPALETTEENTRY lpColorTable, LPDIRECTDRAWPALETTE* lplpDDPalette, IUnknown* pUnkOuter)
+	override DDRESULT CreatePalette(DWORD dwFlags, LPPALETTEENTRY lpColorTable, LPDIRECTDRAWPALETTE* lplpDDPalette, IUnknown* pUnkOuter)
 	{
-		HRESULT res;
+		DDRESULT res;
 		if ((res = _lpDD.CreatePalette(dwFlags, lpColorTable, lplpDDPalette, pUnkOuter)) == DD_OK)
 //			g_myPalettes ~= new MyIDirectDrawPalette(lplpDDPalette);
 		{}
@@ -139,9 +139,9 @@ extern(Windows):
 	}
 	
 	/// 
-	override HRESULT CreateSurface(LPProperSurfaceDesc lpDDSurfaceDesc, LPProperDirectDrawSurface* lplpDDSurface, IUnknown* pUnkOuter)
+	override DDRESULT CreateSurface(LPProperSurfaceDesc lpDDSurfaceDesc, LPProperDirectDrawSurface* lplpDDSurface, IUnknown* pUnkOuter)
 	{
-		HRESULT res;
+		DDRESULT res;
 		version(forceWindowed)
 		{
 			// original primary surface .dwFlags = DDSD_CAPS | DDSD_BACKBUFFERCOUNT
@@ -173,7 +173,7 @@ extern(Windows):
 	}
 
 	/// 
-	override HRESULT DuplicateSurface(LPProperDirectDrawSurface lpDDSurface, LPProperDirectDrawSurface* lplpDupDDSurface)
+	override DDRESULT DuplicateSurface(LPProperDirectDrawSurface lpDDSurface, LPProperDirectDrawSurface* lplpDupDDSurface)
 	{
 		auto res = _lpDD.DuplicateSurface(lpDDSurface, lplpDupDDSurface);
 		Logger.addEntry("MyIDirectDraw.DuplicateSurface(" ~ "" ~ ") = ", res);
@@ -181,42 +181,42 @@ extern(Windows):
 	}
 
 	/// 
-	override HRESULT EnumDisplayModes(DWORD dwFlags, LPProperSurfaceDesc lpDDSurfaceDesc, LPVOID lpContext, LPProperDDEnumModesCallback lpEnumCallback)
+	override DDRESULT EnumDisplayModes(DWORD dwFlags, LPProperSurfaceDesc lpDDSurfaceDesc, LPVOID lpContext, LPProperDDEnumModesCallback lpEnumCallback)
 	{
 		auto res = _lpDD.EnumDisplayModes(dwFlags, lpDDSurfaceDesc, lpContext, lpEnumCallback);
 		Logger.addEntry("MyIDirectDraw.EnumDisplayModes(", dwFlags, ") = ", res);
 		return res;
 	}
 	/// 
-	override HRESULT EnumSurfaces(DWORD dwFlags, LPProperSurfaceDesc lpddsd, LPVOID lpContext, LPProperDDEnumSurfacesCallback lpEnumCallback)
+	override DDRESULT EnumSurfaces(DWORD dwFlags, LPProperSurfaceDesc lpddsd, LPVOID lpContext, LPProperDDEnumSurfacesCallback lpEnumCallback)
 	{
 		auto res = _lpDD.EnumSurfaces(dwFlags, lpddsd, lpContext, lpEnumCallback);
 		Logger.addEntry("MyIDirectDraw.EnumSurfaces(", dwFlags, lpddsd, ") = ", res);
 		return res;
 	}
 	/// 
-	override HRESULT FlipToGDISurface()
+	override DDRESULT FlipToGDISurface()
 	{
 		auto res = _lpDD.FlipToGDISurface();
 		Logger.addEntry("MyIDirectDraw.FlipToGDISurface() = ", res);
 		return res;
 	}
 	/// 
-	override HRESULT GetCaps(LPDDCAPS lpDDDriverCaps, LPDDCAPS lpDDHELCaps)
+	override DDRESULT GetCaps(LPDDCAPS lpDDDriverCaps, LPDDCAPS lpDDHELCaps)
 	{
 		auto res = _lpDD.GetCaps(lpDDDriverCaps, lpDDHELCaps);
 		Logger.addEntry("MyIDirectDraw.GetCaps(" ~ "" ~ ") = ", res);
 		return res;
 	}
 	/// 
-	override HRESULT GetDisplayMode(LPProperSurfaceDesc lpDDSurfaceDesc)
+	override DDRESULT GetDisplayMode(LPProperSurfaceDesc lpDDSurfaceDesc)
 	{
 		auto res = _lpDD.GetDisplayMode(lpDDSurfaceDesc);
 		Logger.addEntry("MyIDirectDraw.GetDisplayMode(" ~ "" ~ ") = ", res);
 		return res;
 	}
 	/// 
-	override HRESULT GetFourCCCodes(DWORD* lpNumCodes, DWORD* lpCodes)
+	override DDRESULT GetFourCCCodes(DWORD* lpNumCodes, DWORD* lpCodes)
 	{
 		auto res = _lpDD.GetFourCCCodes(lpNumCodes, lpCodes);
 		Logger.addEntry("MyIDirectDraw.GetFourCCCodes(", lpNumCodes, lpCodes, ") = ", res);
@@ -224,7 +224,7 @@ extern(Windows):
 	}
 
 	/// 
-	override HRESULT GetGDISurface(LPProperDirectDrawSurface* lplpGDIDDSSurface)
+	override DDRESULT GetGDISurface(LPProperDirectDrawSurface* lplpGDIDDSSurface)
 	{
 		auto res = _lpDD.GetGDISurface(lplpGDIDDSSurface);
 		Logger.addEntry("MyIDirectDraw.GetGDISurface()"); // ~ to!string(cast(size_t)*lplpGDIDDSSurface, ") = ", res);
@@ -232,7 +232,7 @@ extern(Windows):
 	}
 
 	/// 
-	override HRESULT GetMonitorFrequency(LPDWORD lpdwFrequency)
+	override DDRESULT GetMonitorFrequency(LPDWORD lpdwFrequency)
 	{
 		auto res = _lpDD.GetMonitorFrequency(lpdwFrequency);
 		Logger.addEntry("MyIDirectDraw.GetMonitorFrequency(", lpdwFrequency, ")");
@@ -240,7 +240,7 @@ extern(Windows):
 	}
 
 	/// 
-	override HRESULT GetScanLine(LPDWORD lpdwScanLine)
+	override DDRESULT GetScanLine(LPDWORD lpdwScanLine)
 	{
 		auto res = _lpDD.GetScanLine(lpdwScanLine);
 		Logger.addEntry("MyIDirectDraw.GetScanLine(" ~ "" ~ ") = ", res);
@@ -248,7 +248,7 @@ extern(Windows):
 	}
 
 	/// 
-	override HRESULT GetVerticalBlankStatus(LPBOOL lpbIsInVB)
+	override DDRESULT GetVerticalBlankStatus(LPBOOL lpbIsInVB)
 	{
 		auto res = _lpDD.GetVerticalBlankStatus(lpbIsInVB);
 		Logger.addEntry("MyIDirectDraw.GetVerticalBlankStatus(" ~ "" ~ ") = ", res);
@@ -256,7 +256,7 @@ extern(Windows):
 	}
 
 	/// 
-	override HRESULT Initialize(GUID* lpGUID)
+	override DDRESULT Initialize(GUID* lpGUID)
 	{
 		auto res = _lpDD.Initialize(lpGUID);
 		Logger.addEntry("MyIDirectDraw.Initialize() = ", res);
@@ -264,7 +264,7 @@ extern(Windows):
 	}
 
 	/// 
-	override HRESULT RestoreDisplayMode()
+	override DDRESULT RestoreDisplayMode()
 	{
 		Logger.addEntry("MyIDirectDraw.RestoreDisplayMode()");
 		auto res = _lpDD.RestoreDisplayMode();
@@ -273,7 +273,7 @@ extern(Windows):
 
 
 	/// 
-	override HRESULT SetCooperativeLevel(HWND hWnd, DWORD dwFlags)
+	override DDRESULT SetCooperativeLevel(HWND hWnd, DWORD dwFlags)
 	{
 		Logger.addEntry("MyIDirectDraw.SetCooperativeLevel(", hWnd, dwFlags, ")");
 		g_hWnd = hWnd;
@@ -285,7 +285,7 @@ extern(Windows):
 
 	static if (ver < 2)
 	/// 
-	override HRESULT SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBpp)
+	override DDRESULT SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBpp)
 	{
 		Logger.addEntry("MyIDirectDraw.SetDisplayMode(", dwWidth, dwHeight, dwBpp, ")");
 		
@@ -297,7 +297,7 @@ extern(Windows):
 	
 	else
 	///
-	override HRESULT SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBpp, DWORD dwRefreshRate, DWORD dwFlags)
+	override DDRESULT SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBpp, DWORD dwRefreshRate, DWORD dwFlags)
 	{
 		Logger.addEntry("MyIDirectDraw.SetDisplayMode(", dwWidth, dwHeight, dwBpp, dwRefreshRate, dwFlags, ")");
 		
@@ -308,7 +308,7 @@ extern(Windows):
 	}
 
 	/// 
-	override HRESULT WaitForVerticalBlank(DWORD dwFlags, HANDLE hEvent)
+	override DDRESULT WaitForVerticalBlank(DWORD dwFlags, HANDLE hEvent)
 	{
 		auto res = _lpDD.WaitForVerticalBlank(dwFlags, hEvent);
 		Logger.addEntry("MyIDirectDraw.WaitForVerticalBlank(", dwFlags, hEvent, ") = ", res);
@@ -318,7 +318,7 @@ extern(Windows):
 static if(ver >= 2)
 
 	/// 
-	override HRESULT GetAvailableVidMem(LPProperDDSCaps lpDDSCaps, LPDWORD lpdwTotal, LPDWORD lpdwFree)
+	override DDRESULT GetAvailableVidMem(LPProperDDSCaps lpDDSCaps, LPDWORD lpdwTotal, LPDWORD lpdwFree)
 	{
 		auto res = _lpDD.GetAvailableVidMem(lpDDSCaps, lpdwTotal, lpdwFree);
 		Logger.addEntry("MyIDirectDraw.GetAvailableVidMem(", lpDDSCaps, ") = ", res);
@@ -328,7 +328,7 @@ static if(ver >= 2)
 static if(ver >= 4)
 {
 	/// 
-	override HRESULT GetSurfaceFromDC(HDC hdc, LPProperDirectDrawSurface* lpdds)
+	override DDRESULT GetSurfaceFromDC(HDC hdc, LPProperDirectDrawSurface* lpdds)
 	{
 		auto res = _lpDD.GetSurfaceFromDC(hdc, lpdds);
 		Logger.addEntry("MyIDirectDraw.GetSurfaceFromDC() = ", res);
@@ -336,7 +336,7 @@ static if(ver >= 4)
 	}
 
 	/// 
-	override HRESULT RestoreAllSurfaces()
+	override DDRESULT RestoreAllSurfaces()
 	{
 		auto res = _lpDD.RestoreAllSurfaces();
 		Logger.addEntry("MyIDirectDraw.RestoreAllSurfaces() = ", res);
@@ -344,7 +344,7 @@ static if(ver >= 4)
 	}
 
 	/// 
-	override HRESULT TestCooperativeLevel()
+	override DDRESULT TestCooperativeLevel()
 	{
 		auto res = _lpDD.TestCooperativeLevel();
 		Logger.addEntry("MyIDirectDraw.TestCooperativeLevel() = ", res);
@@ -352,7 +352,7 @@ static if(ver >= 4)
 	}
 
 	/// 
-	override HRESULT GetDeviceIdentifier(LPProperDDDeviceIdentifier lpdddi, DWORD dwFlags)
+	override DDRESULT GetDeviceIdentifier(LPProperDDDeviceIdentifier lpdddi, DWORD dwFlags)
 	{
 		auto res = _lpDD.GetDeviceIdentifier(lpdddi, dwFlags);
 		Logger.addEntry("MyIDirectDraw.GetDeviceIdentifier(", dwFlags, ") = ", res);
@@ -364,7 +364,7 @@ static if(ver >= 7)
 {
 
 	/// 
-	override HRESULT StartModeTest(LPSIZE lpModesToTest, DWORD dwNumEntries, DWORD dwFlags)
+	override DDRESULT StartModeTest(LPSIZE lpModesToTest, DWORD dwNumEntries, DWORD dwFlags)
 	{
 		auto res = _lpDD.StartModeTest(lpModesToTest, dwNumEntries, dwFlags);
 		Logger.addEntry("MyIDirectDraw.StartModeTest(", dwFlags, ") = ", res);
@@ -373,7 +373,7 @@ static if(ver >= 7)
 
 
 	/// 
-	override HRESULT EvaluateMode(DWORD dwFlags, DWORD* secondsUntilTimeout)
+	override DDRESULT EvaluateMode(DWORD dwFlags, DWORD* secondsUntilTimeout)
 	{
 		auto res = _lpDD.EvaluateMode(dwFlags, secondsUntilTimeout);
 		Logger.addEntry("MyIDirectDraw.EvaluateMode(", dwFlags, ") = ", res);
