@@ -1,13 +1,4 @@
 module ddraw;
-/*==========================================================================;
- *
- *  Copyright (C) Microsoft Corporation.  All Rights Reserved.
- *
- *  File:	   ddraw.h
- *  Content:	DirectDraw include file
- *
- ***************************************************************************/
-
 
 public import std.c.windows.windows;
 public import std.c.windows.com;
@@ -143,40 +134,29 @@ private
 		alias LPDDSCAPS LPProperDDSCaps;
 	else
 		alias LPDDSCAPS2 LPProperDDSCaps;
-	
+
 	static if (ver < 4)
 		alias LPDDSURFACEDESC LPProperDDSurfaceDesc;
 	else
 		alias LPDDSURFACEDESC2 LPProperDDSurfaceDesc;
-	
+
 	static if (ver < 4)
 		alias LPDDENUMSURFACESCALLBACK LPProperDDEnumSurfacesCallback;
 	else static if (ver < 7)
 		alias LPDDENUMSURFACESCALLBACK2 LPProperDDEnumSurfacesCallback;
 	else
 		alias LPDDENUMSURFACESCALLBACK7 LPProperDDEnumSurfacesCallback;
-	
-	static if (ver < 2)
-		alias LPDIRECTDRAWSURFACE LPProperDirectDrawSurface;
-	else static if (ver < 3)
-		alias LPDIRECTDRAWSURFACE2 LPProperDirectDrawSurface;
-	else static if (ver < 4)
-		alias LPDIRECTDRAWSURFACE3 LPProperDirectDrawSurface;
-	else static if (ver < 7)
-		alias LPDIRECTDRAWSURFACE4 LPProperDirectDrawSurface;
-	else
-		alias LPDIRECTDRAWSURFACE7 LPProperDirectDrawSurface;
 }
-	DDRESULT AddAttachedSurface(LPProperDirectDrawSurface );
+	DDRESULT AddAttachedSurface(IDirectDrawSurfaceB);
 	DDRESULT AddOverlayDirtyRect(LPRECT );
-	DDRESULT Blt(LPRECT, LPProperDirectDrawSurface, LPRECT, DWORD, LPDDBLTFX );
+	DDRESULT Blt(LPRECT, IDirectDrawSurfaceB, LPRECT, DWORD, LPDDBLTFX);
 	DDRESULT BltBatch(LPDDBLTBATCH, DWORD, DWORD );
-	DDRESULT BltFast(DWORD, DWORD, LPProperDirectDrawSurface, LPRECT, DWORD );
-	DDRESULT DeleteAttachedSurface(DWORD, LPProperDirectDrawSurface );
+	DDRESULT BltFast(DWORD, DWORD, IDirectDrawSurfaceB, LPRECT, DWORD );
+	DDRESULT DeleteAttachedSurface(DWORD, IDirectDrawSurfaceB);
 	DDRESULT EnumAttachedSurfaces(LPVOID, LPProperDDEnumSurfacesCallback );
 	DDRESULT EnumOverlayZOrders(DWORD, LPVOID, LPProperDDEnumSurfacesCallback );
-	DDRESULT Flip(LPProperDirectDrawSurface, DWORD );
-	DDRESULT GetAttachedSurface(LPProperDDSCaps, LPProperDirectDrawSurface *);
+	DDRESULT Flip(IDirectDrawSurfaceB, DWORD );
+	DDRESULT GetAttachedSurface(LPProperDDSCaps, IDirectDrawSurfaceB*);
 	DDRESULT GetBltStatus(DWORD );
 	DDRESULT GetCaps(LPProperDDSCaps );
 	DDRESULT GetClipper(LPDIRECTDRAWCLIPPER *);
@@ -189,7 +169,7 @@ private
 	DDRESULT GetSurfaceDesc(LPProperDDSurfaceDesc );
 	DDRESULT Initialize(LPDIRECTDRAW, LPProperDDSurfaceDesc ); // LPDIRECTDRA is correct
 	DDRESULT IsLost();
-	DDRESULT Lock(LPRECT, LPProperDDSurfaceDesc, DWORD, HANDLE );
+	DDRESULT Lock(LPRECT, LPProperDDSurfaceDesc, DWORD, HANDLE);
 	DDRESULT ReleaseDC(HDC );
 	DDRESULT Restore();
 	DDRESULT SetClipper(LPDIRECTDRAWCLIPPER );
@@ -197,9 +177,9 @@ private
 	DDRESULT SetOverlayPosition(LONG, LONG );
 	DDRESULT SetPalette(LPDIRECTDRAWPALETTE );
 	DDRESULT Unlock(LPRECT ); // was LPVOID before ver4
-	DDRESULT UpdateOverlay(LPRECT, LPProperDirectDrawSurface, LPRECT, DWORD, LPDDOVERLAYFX );
+	DDRESULT UpdateOverlay(LPRECT, IDirectDrawSurfaceB, LPRECT, DWORD, LPDDOVERLAYFX);
 	DDRESULT UpdateOverlayDisplay(DWORD );
-	DDRESULT UpdateOverlayZOrder(DWORD, LPProperDirectDrawSurface );
+	DDRESULT UpdateOverlayZOrder(DWORD, IDirectDrawSurfaceB);
 	
 	// IDirectDrawSurface2
 	static if (ver >= 2)
@@ -241,31 +221,31 @@ private
 * Various structures used to invoke DirectDraw.
 *
 *==========================================================================*/
-// TODO: is this correct not being pointers since D classes are reference types?
-alias IDirectDrawB!(1) IDirectDraw; ///
-alias IDirectDrawB!(2) IDirectDraw2; ///
-alias IDirectDrawB!(4) IDirectDraw4; ///
-alias IDirectDrawB!(7) IDirectDraw7; ///
+alias IDirectDraw  = IDirectDrawB!(1); ///
+alias IDirectDraw2 = IDirectDrawB!(2); ///
+alias IDirectDraw4 = IDirectDrawB!(4); ///
+alias IDirectDraw7 = IDirectDrawB!(7); ///
 
-alias IDirectDrawB!(1) LPDIRECTDRAW;
-alias IDirectDrawB!(2) LPDIRECTDRAW2;
-alias IDirectDrawB!(4) LPDIRECTDRAW4;
-alias IDirectDrawB!(7) LPDIRECTDRAW7;
-alias IDirectDrawSurfaceB!(1) LPDIRECTDRAWSURFACE;
-alias IDirectDrawSurfaceB!(2) LPDIRECTDRAWSURFACE2;
-alias IDirectDrawSurfaceB!(3) LPDIRECTDRAWSURFACE3;
-alias IDirectDrawSurfaceB!(4) LPDIRECTDRAWSURFACE4;
-alias IDirectDrawSurfaceB!(7) LPDIRECTDRAWSURFACE7;
+// interfaces are reference types, so no extra pointer!
+alias LPDIRECTDRAW  = IDirectDraw;  ///
+alias LPDIRECTDRAW2 = IDirectDraw2; ///
+alias LPDIRECTDRAW4 = IDirectDraw4; ///
+alias LPDIRECTDRAW7 = IDirectDraw7; ///
 
-alias IDirectDrawPalette LPDIRECTDRAWPALETTE;
-alias IDirectDrawClipper LPDIRECTDRAWCLIPPER;
-alias IDirectDrawColorControl LPDIRECTDRAWCOLORCONTROL;
-alias IDirectDrawGammaControl LPDIRECTDRAWGAMMACONTROL;
+alias LPDIRECTDRAWSURFACE  = IDirectDrawSurface;  ///
+alias LPDIRECTDRAWSURFACE2 = IDirectDrawSurface2; ///
+alias LPDIRECTDRAWSURFACE3 = IDirectDrawSurface3; ///
+alias LPDIRECTDRAWSURFACE4 = IDirectDrawSurface4; ///
+alias LPDIRECTDRAWSURFACE7 = IDirectDrawSurface7; ///
+alias LPDIRECTDRAWPALETTE = IDirectDrawPalette; ///
+alias LPDIRECTDRAWCLIPPER = IDirectDrawClipper; ///
+alias LPDIRECTDRAWCOLORCONTROL = IDirectDrawColorControl; ///
+alias LPDIRECTDRAWGAMMACONTROL = IDirectDrawGammaControl; ///
 
-alias void* LPDDFXROP; //alias _DDFXROP *LPDDFXROP;
-alias DDSURFACEDESC* LPDDSURFACEDESC;
-alias DDSURFACEDESC2* LPDDSURFACEDESC2;
-alias DDCOLORCONTROL* LPDDCOLORCONTROL;
+alias LPDDFXROP = void*; //alias LPDDFXROP = _DDFXROP*;
+alias LPDDSURFACEDESC  = DDSURFACEDESC*;  ///
+alias LPDDSURFACEDESC2 = DDSURFACEDESC2*; ///
+alias LPDDCOLORCONTROL = DDCOLORCONTROL*; ///
 
 
 interface IDirectDrawB(uint ver) : IUnknown
@@ -310,17 +290,17 @@ private
 }
 
 	DDRESULT Compact();
-	DDRESULT CreateClipper(DWORD, LPDIRECTDRAWCLIPPER *, IUnknown *);
-	DDRESULT CreatePalette(DWORD, LPPALETTEENTRY, LPDIRECTDRAWPALETTE *, IUnknown *);
-	DDRESULT CreateSurface(LPProperSurfaceDesc, LPProperDirectDrawSurface *, IUnknown *);
-	DDRESULT DuplicateSurface(LPProperDirectDrawSurface, LPProperDirectDrawSurface *);
+	DDRESULT CreateClipper(DWORD, LPDIRECTDRAWCLIPPER *, IUnknown);
+	DDRESULT CreatePalette(DWORD, LPPALETTEENTRY, LPDIRECTDRAWPALETTE *, IUnknown);
+	DDRESULT CreateSurface(LPProperSurfaceDesc, LPProperDirectDrawSurface*, IUnknown);
+	DDRESULT DuplicateSurface(LPProperDirectDrawSurface, LPProperDirectDrawSurface*);
 	DDRESULT EnumDisplayModes(DWORD, LPProperSurfaceDesc, LPVOID, LPProperDDEnumModesCallback );
 	DDRESULT EnumSurfaces(DWORD, LPProperSurfaceDesc, LPVOID, LPProperDDEnumSurfacesCallback );
 	DDRESULT FlipToGDISurface();
 	DDRESULT GetCaps(LPDDCAPS, LPDDCAPS );
 	DDRESULT GetDisplayMode(LPProperSurfaceDesc );
 	DDRESULT GetFourCCCodes(LPDWORD, LPDWORD );
-	DDRESULT GetGDISurface(LPProperDirectDrawSurface *);
+	DDRESULT GetGDISurface(LPProperDirectDrawSurface*);
 	DDRESULT GetMonitorFrequency(LPDWORD );
 	DDRESULT GetScanLine(LPDWORD );
 	DDRESULT GetVerticalBlankStatus(LPBOOL );
@@ -338,7 +318,7 @@ private
 	
 	static if(ver >= 4)
 	{
-		DDRESULT GetSurfaceFromDC(HDC, LPProperDirectDrawSurface *);
+		DDRESULT GetSurfaceFromDC(HDC, LPProperDirectDrawSurface*);
 		DDRESULT RestoreAllSurfaces();
 		DDRESULT TestCooperativeLevel();
 		DDRESULT GetDeviceIdentifier(LPProperDDDeviceIdentifier, DWORD );
@@ -419,10 +399,11 @@ alias DirectDrawEnumerateA DirectDrawEnumerate;
 alias LPDDENUMCALLBACKEXA LPDDENUMCALLBACKEX;
 alias LPDIRECTDRAWENUMERATEEXA LPDIRECTDRAWENUMERATEEX;
 alias DirectDrawEnumerateExA DirectDrawEnumerateEx;
-extern (Windows):
-DDRESULT DirectDrawCreate(GUID *lpGUID, LPDIRECTDRAW *lplpDD, IUnknown *pUnkOuter);
-DDRESULT DirectDrawCreateEx(GUID *lpGuid, LPVOID *lplpDD, const ref IID iid, IUnknown *pUnkOuter);
-DDRESULT DirectDrawCreateClipper(DWORD dwFlags, LPDIRECTDRAWCLIPPER *lplpDDClipper, IUnknown *pUnkOuter);
+
+DDRESULT DirectDrawCreate(GUID *lpGUID, LPDIRECTDRAW *lplpDD, IUnknown pUnkOuter);
+DDRESULT DirectDrawCreateEx(GUID *lpGuid, LPVOID *lplpDD, const ref IID iid, IUnknown pUnkOuter);
+DDRESULT DirectDrawCreateClipper(DWORD dwFlags, LPDIRECTDRAWCLIPPER *lplpDDClipper, IUnknown pUnkOuter);
+
 /*
  * Flags for DirectDrawEnumerateEx
  * DirectDrawEnumerateEx supercedes DirectDrawEnumerate. You must use GetProcAddress to

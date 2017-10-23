@@ -3,6 +3,7 @@
  */
 module tools;
 
+import std.conv;
 import std.stdio;
 import std.string;
 import std.traits;
@@ -80,7 +81,7 @@ string myformat(bool bInsideStruct = false, T...)(T ts)
 //				res ~= t;
 		}
 		else
-			res ~= format(t);
+			res ~= to!string(t);
 		
 		static if(tidx < ts.length-1 && (bInsideStruct || !isSomeString!(typeof(t)))) // don't add a , after a string
 			res ~= ", ";
@@ -89,7 +90,7 @@ string myformat(bool bInsideStruct = false, T...)(T ts)
 	return res;
 }
 
-version(unittest)
+unittest
 {
 	struct S2
 	{
@@ -104,11 +105,9 @@ version(unittest)
 		
 		S2 adad;
 	}
-	void main()
-	{
+
 	S2 sss = S2([5,4,5,4], "foo");
 	S s = S(2, &sss);
-	assert(myformat(s) == `{a:2, p:{aaaa:[5,4,5,4], ddd:"foo"}, adad:{aaaa:[0,1,2,3], ddd:"asd"}}`, "myformat is broken");
+	assert(myformat(s) == `{a:2, p:{aaaa:[5, 4, 5, 4], ddd:"foo"}, adad:{aaaa:[0, 1, 2, 3], ddd:"asd"}}`, "myformat is broken");
 	assert(myformat(2) == "2");
-	}
 }

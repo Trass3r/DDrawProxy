@@ -9,51 +9,26 @@ import logger;
 alias GUID* REFGUID; 
 
 alias MyIDirectDrawSurfaceB!(1) MyIDirectDrawSurface; ///
-alias MyIDirectDrawSurfaceB!(2) MyIDirectDrawSurface2; ///
-alias MyIDirectDrawSurfaceB!(3) MyIDirectDrawSurface3; ///
+//alias MyIDirectDrawSurfaceB!(2) MyIDirectDrawSurface2; ///
+//alias MyIDirectDrawSurfaceB!(3) MyIDirectDrawSurface3; ///
 alias MyIDirectDrawSurfaceB!(4) MyIDirectDrawSurface4; ///
 alias MyIDirectDrawSurfaceB!(7) MyIDirectDrawSurface7; ///
 
 class MyIDirectDrawSurfaceB(uint ver) : IDirectDrawSurfaceB!(ver)
 {
 private:
-	static if (ver >= 4)
-		alias LPDDSCAPS2 LPProperDDSCaps;
-	else
-		alias LPDDSCAPS LPProperDDSCaps;
-	
-	static if (ver >= 4)
-		alias LPDDSURFACEDESC2 LPProperDDSurfaceDesc;
-	else
-		alias LPDDSURFACEDESC LPProperDDSurfaceDesc;
-
-	static if (ver < 4)
-		alias LPDDENUMSURFACESCALLBACK LPProperDDEnumSurfacesCallback;
-	else static if (ver < 7)
-		alias LPDDENUMSURFACESCALLBACK2 LPProperDDEnumSurfacesCallback;
-	else
-		alias LPDDENUMSURFACESCALLBACK7 LPProperDDEnumSurfacesCallback;
-	
-	static if (ver < 2)
-		alias LPDIRECTDRAWSURFACE LPProperDirectDrawSurface;
-	else static if (ver < 3)
-		alias LPDIRECTDRAWSURFACE2 LPProperDirectDrawSurface;
-	else static if (ver < 4)
-		alias LPDIRECTDRAWSURFACE3 LPProperDirectDrawSurface;
-	else static if (ver < 7)
-		alias LPDIRECTDRAWSURFACE4 LPProperDirectDrawSurface;
-	else
-		alias LPDIRECTDRAWSURFACE7 LPProperDirectDrawSurface;
-
-	
-	alias IDirectDrawSurfaceB!(ver) BaseInterface;
+	alias BaseInterface = IDirectDrawSurfaceB!(ver);
 	BaseInterface _lpDDSurface;
-
+/*
+	alias LPProperDDSCaps = BaseInterface.LPProperDDSCaps;
+	alias LPProperDDSurfaceDesc = BaseInterface.LPProperDDSurfaceDesc;
+	alias LPProperDDEnumSurfacesCallback = BaseInterface.LPProperDDEnumSurfacesCallback;
+*/
 public:
-	this(LPProperDirectDrawSurface* lplpDD)
+	this(BaseInterface* lplpDD)
 	{
-		_lpDDSurface = cast(BaseInterface) *lplpDD; // save the interface as a member
-		*lplpDD = cast(LPProperDirectDrawSurface) cast(BaseInterface) this; // alter the given pointer to this class instance
+		_lpDDSurface = *lplpDD; // save the interface as a member
+		*lplpDD = this; // alter the given pointer to this class instance
 		// it's crucial to cast to the base interface here
 	}
 	
@@ -106,7 +81,7 @@ extern(Windows):
 	// IDirectDrawSurface methods
 
 	/// 
-	override DDRESULT AddAttachedSurface(LPProperDirectDrawSurface lpDDSAttachedSurface)
+	override DDRESULT AddAttachedSurface(BaseInterface lpDDSAttachedSurface)
 	{		auto res = _lpDDSurface.AddAttachedSurface(lpDDSAttachedSurface);
 		Logger.addEntry("MyIDirectDrawSurface.AddAttachedSurface() = ", res);
 		return res;
@@ -120,7 +95,7 @@ extern(Windows):
 	}
 
 	/// 
-	override DDRESULT Blt(LPRECT lpDestRect, LPProperDirectDrawSurface lpDDSrcSurface, LPRECT lpSrcRect, DWORD dwFlags, LPDDBLTFX lpDDBltFx)
+	override DDRESULT Blt(LPRECT lpDestRect, BaseInterface lpDDSrcSurface, LPRECT lpSrcRect, DWORD dwFlags, LPDDBLTFX lpDDBltFx)
 	{		auto res = _lpDDSurface.Blt(lpDestRect, lpDDSrcSurface, lpSrcRect, dwFlags, lpDDBltFx);
 		Logger.addEntry("MyIDirectDrawSurface.Blt(", lpDestRect, lpDDSrcSurface, lpSrcRect, dwFlags, lpDDBltFx, ") = ", res);
 		return res;
@@ -134,14 +109,14 @@ extern(Windows):
 	}
 
 	/// 
-	override DDRESULT BltFast(DWORD dwX, DWORD dwY, LPProperDirectDrawSurface lpDDSrcSurface, LPRECT lpSrcRect, DWORD dwTrans)
+	override DDRESULT BltFast(DWORD dwX, DWORD dwY, BaseInterface lpDDSrcSurface, LPRECT lpSrcRect, DWORD dwTrans)
 	{		auto res = _lpDDSurface.BltFast(dwX, dwY, lpDDSrcSurface, lpSrcRect, dwTrans);
 		Logger.addEntry("MyIDirectDrawSurface.BltFast(", dwX, dwY, lpDDSrcSurface, lpSrcRect, dwTrans, ") = ", res);
 		return res;
 	}
 
 	/// 
-	override DDRESULT DeleteAttachedSurface(DWORD dwFlags, LPProperDirectDrawSurface lpDDSAttachedSurface)
+	override DDRESULT DeleteAttachedSurface(DWORD dwFlags, BaseInterface lpDDSAttachedSurface)
 	{		auto res = _lpDDSurface.DeleteAttachedSurface(dwFlags, lpDDSAttachedSurface);
 		Logger.addEntry("MyIDirectDrawSurface.DeleteAttachedSurface(", dwFlags, ") = ", res);
 		return res;
@@ -162,14 +137,14 @@ extern(Windows):
 	}
 
 	/// 
-	override DDRESULT Flip(LPProperDirectDrawSurface lpDDSurfaceTargetOverride, DWORD dwFlags)
+	override DDRESULT Flip(BaseInterface lpDDSurfaceTargetOverride, DWORD dwFlags)
 	{		auto res = _lpDDSurface.Flip(lpDDSurfaceTargetOverride, dwFlags);
 		Logger.addEntry("MyIDirectDrawSurface.Flip(", lpDDSurfaceTargetOverride, dwFlags, ") = ", res);
 		return res;
 	}
 
 	/// 
-	override DDRESULT GetAttachedSurface(LPProperDDSCaps lpDDSCaps, LPProperDirectDrawSurface* lplpDDAttachedSurface)
+	override DDRESULT GetAttachedSurface(LPProperDDSCaps lpDDSCaps, BaseInterface* lplpDDAttachedSurface)
 	{		auto res = _lpDDSurface.GetAttachedSurface(lpDDSCaps, lplpDDAttachedSurface);
 		Logger.addEntry("MyIDirectDrawSurface.GetAttachedSurface() = ", res);
 		return res;
@@ -316,7 +291,7 @@ extern(Windows):
 	}
 
 	/// 
-	override DDRESULT UpdateOverlay(LPRECT lpSrcRect, LPProperDirectDrawSurface lpDDDestSurface, LPRECT lpDestRect, DWORD dwFlags, LPDDOVERLAYFX lpDDOverlayFx)
+	override DDRESULT UpdateOverlay(LPRECT lpSrcRect, BaseInterface lpDDDestSurface, LPRECT lpDestRect, DWORD dwFlags, LPDDOVERLAYFX lpDDOverlayFx)
 	{		auto res = _lpDDSurface.UpdateOverlay(lpSrcRect, lpDDDestSurface, lpDestRect, dwFlags, lpDDOverlayFx);
 		Logger.addEntry("MyIDirectDrawSurface.UpdateOverlay() = ", res);
 		return res;
@@ -330,7 +305,7 @@ extern(Windows):
 	}
 
 	/// 
-	override DDRESULT UpdateOverlayZOrder(DWORD dwFlags, LPProperDirectDrawSurface lpDDSReference)
+	override DDRESULT UpdateOverlayZOrder(DWORD dwFlags, BaseInterface lpDDSReference)
 	{		auto res = _lpDDSurface.UpdateOverlayZOrder(dwFlags, lpDDSReference);
 		Logger.addEntry("MyIDirectDrawSurface.UpdateOverlayZOrder() = ", res);
 		return res;

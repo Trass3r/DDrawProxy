@@ -12,18 +12,16 @@ import myiddrawsurface;
 import myipalette;
 
 __gshared HWND g_hWnd;
-__gshared MyIDirectDrawSurface[] g_mySurfaces;
-__gshared MyIDirectDrawPalette[] g_myPalettes;
 
 alias MyIDirectDrawB!(1) MyIDirectDraw; ///
-alias MyIDirectDrawB!(2) MyIDirectDraw2; ///
+//alias MyIDirectDrawB!(2) MyIDirectDraw2; ///
 alias MyIDirectDrawB!(4) MyIDirectDraw4; ///
 alias MyIDirectDrawB!(7) MyIDirectDraw7; ///
 
 class MyIDirectDrawB(uint ver) : IDirectDrawB!(ver)
 {
 private:
-	static if (ver < 4)
+/*	static if (ver < 4)
 		alias LPDDSCAPS LPProperDDSCaps;
 	else
 		alias LPDDSCAPS2 LPProperDDSCaps;
@@ -45,23 +43,25 @@ private:
 	else
 		alias LPDDENUMMODESCALLBACK2 LPProperDDEnumModesCallback;
 
-	static if (ver < 2)
-		alias LPDIRECTDRAWSURFACE LPProperDirectDrawSurface;
-//	else static if (ver < 4)
-//		alias LPDIRECTDRAWSURFACE2 LPProperDirectDrawSurface;
-	else static if (ver < 7)
-		alias LPDIRECTDRAWSURFACE4 LPProperDirectDrawSurface;
-	else
-		alias LPDIRECTDRAWSURFACE7 LPProperDirectDrawSurface;
-
 	static if (ver < 7)
 		alias LPDDDEVICEIDENTIFIER LPProperDDDeviceIdentifier;
 	else
 		alias LPDDDEVICEIDENTIFIER2 LPProperDDDeviceIdentifier;
-
+*/
 
 	alias IDirectDrawB!(ver) BaseInterface;
 	BaseInterface _lpDD;
+
+	alias LPProperDirectDrawSurface = BaseInterface.LPProperDirectDrawSurface;
+	static if (ver < 2)
+		alias MyProperDirectDrawSurface = MyIDirectDrawSurface;
+	else static if (ver < 7)
+		alias MyProperDirectDrawSurface = MyIDirectDrawSurface4;
+	else
+		alias MyProperDirectDrawSurface = MyIDirectDrawSurface7;
+
+	MyIDirectDrawSurfaceB!ver[] _mySurfaces;
+	MyIDirectDrawPalette[] _myPalettes;
 
 public:
 	this(void** lplpDD)
@@ -71,8 +71,9 @@ public:
 		*lplpDD = cast(void*) cast(BaseInterface) this; // alter the given pointer to this class instance
 		// it's crucial to cast to the base interface here
 	}
+
 extern(Windows):
-	
+
 	/// 
 	override HRESULT QueryInterface(REFIID riid, LPVOID* ppvObj)
 	{
@@ -120,7 +121,7 @@ extern(Windows):
 	}
 	
 	/// 
-	override DDRESULT CreateClipper(DWORD dwFlags, LPDIRECTDRAWCLIPPER* lplpDDClipper, IUnknown* pUnkOuter)
+	override DDRESULT CreateClipper(DWORD dwFlags, LPDIRECTDRAWCLIPPER* lplpDDClipper, IUnknown pUnkOuter)
 	{
 		auto res = _lpDD.CreateClipper(dwFlags, lplpDDClipper, pUnkOuter);
 		Logger.addEntry("MyIDirectDraw.CreateClipper(", dwFlags, lplpDDClipper, ") = ", res);
@@ -128,18 +129,18 @@ extern(Windows):
 	}
 	
 	/// 
-	override DDRESULT CreatePalette(DWORD dwFlags, LPPALETTEENTRY lpColorTable, LPDIRECTDRAWPALETTE* lplpDDPalette, IUnknown* pUnkOuter)
+	override DDRESULT CreatePalette(DWORD dwFlags, LPPALETTEENTRY lpColorTable, LPDIRECTDRAWPALETTE* lplpDDPalette, IUnknown pUnkOuter)
 	{
 		DDRESULT res;
 		if ((res = _lpDD.CreatePalette(dwFlags, lpColorTable, lplpDDPalette, pUnkOuter)) == DD_OK)
-//			g_myPalettes ~= new MyIDirectDrawPalette(lplpDDPalette);
+//			_myPalettes ~= new MyIDirectDrawPalette(lplpDDPalette);
 		{}
 		Logger.addEntry("MyIDirectDraw.CreatePalette(", dwFlags, lplpDDPalette, ") = ", res);
 		return res;
 	}
 	
 	/// 
-	override DDRESULT CreateSurface(LPProperSurfaceDesc lpDDSurfaceDesc, LPProperDirectDrawSurface* lplpDDSurface, IUnknown* pUnkOuter)
+	override DDRESULT CreateSurface(LPProperSurfaceDesc lpDDSurfaceDesc, LPProperDirectDrawSurface* lplpDDSurface, IUnknown pUnkOuter)
 	{
 		DDRESULT res;
 		version(forceWindowed)
@@ -163,9 +164,7 @@ extern(Windows):
 		{
 			if((res = _lpDD.CreateSurface(lpDDSurfaceDesc, lplpDDSurface, pUnkOuter)) == DD_OK)
 			{
-				Logger.addEntry("original surface looks like ", (cast(ubyte*) *cast(IDirectDrawSurface*)lplpDDSurface)[0 .. IDirectDrawSurface.sizeof]);
-				g_mySurfaces ~= new MyIDirectDrawSurface(lplpDDSurface);
-				Logger.addEntry("my surface looks like ", (cast(ubyte*) *cast(IDirectDrawSurface*)lplpDDSurface)[0 .. IDirectDrawSurface.sizeof]);
+				_mySurfaces ~= new MyProperDirectDrawSurface(cast(IDirectDrawSurfaceB!ver*) lplpDDSurface);
 			}
 		}
 		Logger.addEntry("MyIDirectDraw.CreateSurface(", lplpDDSurface, lpDDSurfaceDesc, ") = ", res);

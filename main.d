@@ -5,7 +5,7 @@ module main;
 
 import std.c.windows.com;
 import std.c.windows.windows;
-import core.dll_helper;
+import core.sys.windows.dll;
 //import std.stdio;
 import ddraw;
 import myiddraw;
@@ -26,7 +26,7 @@ __gshared HINSTANCE g_hInst;
 extern (Windows)
 BOOL DllMain(HINSTANCE hInstance, ULONG ulReason, LPVOID pvReserved)
 {
-	switch (ulReason)
+	final switch (ulReason)
 	{
 	case DLL_PROCESS_ATTACH:
 		g_hInst = hInstance;
@@ -83,12 +83,12 @@ void loadOriginalDll()
 
 extern(Windows):
 __gshared MyIDirectDraw g_myIDDraw;
-__gshared MyIDirectDraw2 g_myIDDraw2;
+//__gshared MyIDirectDraw2 g_myIDDraw2;
 __gshared MyIDirectDraw4 g_myIDDraw4;
 __gshared MyIDirectDraw7 g_myIDDraw7;
 
 /// An exported function (faking ddraw.dll's export)
-export HRESULT DirectDrawCreateHook(GUID* lpGUID, LPDIRECTDRAW* lplpDD, IUnknown* pUnkOuter)
+export HRESULT DirectDrawCreateHook(GUID* lpGUID, LPDIRECTDRAW* lplpDD, IUnknown pUnkOuter)
 {
 	Logger.addEntry("DDRAWPROXY: Exported function DirectDrawCreate reached.");
 	
@@ -104,7 +104,7 @@ export HRESULT DirectDrawCreateHook(GUID* lpGUID, LPDIRECTDRAW* lplpDD, IUnknown
 	return res;
 }
 
-HRESULT DirectDrawCreateExHook(GUID* lpGuid, LPVOID* lplpDD, REFIID iid, IUnknown* pUnkOuter)
+export HRESULT DirectDrawCreateExHook(GUID* lpGuid, LPVOID* lplpDD, REFIID iid, IUnknown pUnkOuter)
 {
 	Logger.addEntry("DDRAWPROXY: Exported function DirectDrawCreateEx reached.");
 
@@ -117,7 +117,8 @@ HRESULT DirectDrawCreateExHook(GUID* lpGuid, LPVOID* lplpDD, REFIID iid, IUnknow
 		if (*iid == IID_IDirectDraw)
 			g_myIDDraw = new MyIDirectDraw(lplpDD);
 		else if (*iid == IID_IDirectDraw2)
-			g_myIDDraw2 = new MyIDirectDraw2(lplpDD);
+			throw new Exception("DDraw version 2 not supported");
+//			g_myIDDraw2 = new MyIDirectDraw2(lplpDD);
 		else if (*iid == IID_IDirectDraw4)
 			g_myIDDraw4 = new MyIDirectDraw4(lplpDD);
 		else if (*iid == IID_IDirectDraw7)
